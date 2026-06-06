@@ -14,10 +14,20 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/types": "^7.29.7",
     "@types/react": "^18.3.13",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.3",
     "typescript": "^5.6.3",
     "vite": "^5.4.10"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.61.1",
+    "@rollup/rollup-linux-x64-musl": "4.61.1",
+    "@rollup/rollup-linux-arm64-gnu": "4.61.1",
+    "@rollup/rollup-darwin-arm64": "4.61.1",
+    "@rollup/rollup-darwin-x64": "4.61.1",
+    "@rollup/rollup-win32-x64-msvc": "4.61.1"
   }
 }
