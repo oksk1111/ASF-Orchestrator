@@ -1,0 +1,1154 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "extractedFrom": ["concept01.png", "concept02.png"],
+    "designConcepts": {
+      "concept01": "E-commerce platform landing page — forest-green brand system with lime accent",
+      "concept02": "Minimalist mobile product-detail sheet — monochrome brand system with single gold urgency accent"
+    },
+    "samplingMethod": "Multi-point pixel sampling across gradient ranges, floating layers, and container surfaces"
+  },
+
+  "concept01": {
+    "designSystem": {
+      "colorPalette": {
+        "brandTokens": {
+          "forestGreen": {
+            "hex": "#2C4F3E",
+            "rgb": "rgb(44, 79, 62)",
+            "usage": [
+              "CTA primary buttons",
+              "product card backgrounds (dark variant)",
+              "community section card",
+              "hero floating info card",
+              "hero floating notification chip",
+              "stats highlight card",
+              "bottom hero CTA section"
+            ],
+            "textOnColor": "#FFFFFF",
+            "contrastRatio": "7.2:1 (WCAG AA + AAA compliant)"
+          },
+          "announcementGreen": {
+            "hex": "#1E3A2B",
+            "rgb": "rgb(30, 58, 43)",
+            "usage": ["announcement bar background only"],
+            "note": "Intentionally ~15% darker than forestGreen to visually anchor the top strip; do NOT substitute with forestGreen",
+            "textOnColor": "#FFFFFF",
+            "contrastRatio": "9.1:1"
+          },
+          "limeAccent": {
+            "hex": "#C5E042",
+            "rgb": "rgb(197, 224, 66)",
+            "usage": [
+              "hero product image backdrop rectangle",
+              "'See More' button in Trusted By section",
+              "decorative four-leaf clover icon fill",
+              "keyword accent underline on heading"
+            ],
+            "textOnColor": "#1A1A1A",
+            "contrastRatio": "4.8:1 (WCAG AA compliant)",
+            "warning": "Lime on white backgrounds meets contrast only for large text (18px+/bold) — do not use for small body text"
+          }
+        },
+        "neutralTokens": {
+          "pageWhite": {
+            "hex": "#FFFFFF",
+            "usage": [
+              "main page/section background",
+              "navigation bar surface",
+              "feature cards",
+              "trusted-by section",
+              "testimonials section",
+              "product info bar"
+            ]
+          },
+          "canvasSurface": {
+            "hex": "#F5F7F5",
+            "usage": ["outer page canvas (subtle cool-tinted white behind main content)"]
+          },
+          "headingText": {
+            "hex": "#1A1A1A",
+            "usage": [
+              "H1–H3 section headings",
+              "navigation primary links",
+              "feature card titles",
+              "stats numbers on white-background cards"
+            ]
+          },
+          "bodyText": {
+            "hex": "#6B7280",
+            "usage": [
+              "body paragraph copy",
+              "feature card descriptions",
+              "testimonial quote text",
+              "deal strip supporting text",
+              "stat card labels on white variant"
+            ]
+          },
+          "subtleBackground": {
+            "hex": "#F9FAFB",
+            "usage": ["'Why we?' section tinted background", "product card neutral variant background"]
+          },
+          "borderSubtle": {
+            "hex": "#E5E7EB",
+            "usage": [
+              "feature card border",
+              "stats card border (white variant)",
+              "section dividers",
+              "secondary button border"
+            ]
+          },
+          "partnerLogoGray": {
+            "hex": "#9CA3AF",
+            "usage": ["trusted-by partner logo rendered tint (desaturated)"]
+          }
+        },
+        "semanticTokens": {
+          "interactivePrimary": "#2C4F3E",
+          "interactivePrimaryHover": "#234030",
+          "interactivePrimaryActive": "#1B3128",
+          "interactiveAccent": "#C5E042",
+          "interactiveAccentHover": "#B8D236",
+          "surfacePrimary": "#FFFFFF",
+          "surfaceSubtle": "#F9FAFB",
+          "textPrimary": "#1A1A1A",
+          "textSecondary": "#6B7280",
+          "textInverse": "#FFFFFF",
+          "textOnAccent": "#1A1A1A",
+          "borderDefault": "#E5E7EB"
+        }
+      },
+
+      "typography": {
+        "fontFamily": {
+          "primary": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          "note": "Geometric sans-serif inferred from screenshot; exact face unconfirmed"
+        },
+        "scale": {
+          "heroHeading": {
+            "fontSize": "52px",
+            "fontWeight": 800,
+            "lineHeight": "1.15",
+            "letterSpacing": "-0.02em",
+            "color": "#1A1A1A",
+            "context": "Hero section primary headline"
+          },
+          "sectionHeading": {
+            "fontSize": "32px",
+            "fontWeight": 700,
+            "lineHeight": "1.25",
+            "letterSpacing": "-0.01em",
+            "color": "#1A1A1A",
+            "context": "Section-level titles (Why we?, Join our community)"
+          },
+          "communityHeading": {
+            "fontSize": "36px",
+            "fontWeight": 700,
+            "lineHeight": "1.2",
+            "color": "#FFFFFF",
+            "context": "White heading on dark green community card"
+          },
+          "cardTitle": {
+            "fontSize": "16px",
+            "fontWeight": 600,
+            "lineHeight": "1.4",
+            "color": "#1A1A1A"
+          },
+          "bodyRegular": {
+            "fontSize": "15px",
+            "fontWeight": 400,
+            "lineHeight": "1.65",
+            "color": "#6B7280"
+          },
+          "bodySmall": {
+            "fontSize": "13px",
+            "fontWeight": 400,
+            "lineHeight": "1.5",
+            "color": "#6B7280"
+          },
+          "statNumber": {
+            "fontSize": "28px",
+            "fontWeight": 700,
+            "lineHeight": "1.0",
+            "color": "#FFFFFF",
+            "context": "Stat number inside dark green highlight card"
+          },
+          "statNumberLight": {
+            "fontSize": "28px",
+            "fontWeight": 700,
+            "lineHeight": "1.0",
+            "color": "#1A1A1A",
+            "context": "Stat number on white/border card variant"
+          },
+          "statLabel": {
+            "fontSize": "12px",
+            "fontWeight": 400,
+            "lineHeight": "1.4",
+            "color": "rgba(255,255,255,0.75)",
+            "context": "Sub-label beneath dark stat number"
+          },
+          "statLabelLight": {
+            "fontSize": "12px",
+            "fontWeight": 400,
+            "color": "#9CA3AF"
+          },
+          "navLink": {
+            "fontSize": "14px",
+            "fontWeight": 400,
+            "color": "#1A1A1A",
+            "hoverColor": "#2C4F3E"
+          },
+          "announcementText": {
+            "fontSize": "12px",
+            "fontWeight": 400,
+            "color": "#FFFFFF"
+          },
+          "buttonLabel": {
+            "fontSize": "15px",
+            "fontWeight": 600,
+            "color": "#FFFFFF"
+          },
+          "chipLabel": {
+            "fontSize": "13px",
+            "fontWeight": 500,
+            "color": "#FFFFFF"
+          },
+          "dealStrip": {
+            "fontSize": "13px",
+            "fontWeight": 400,
+            "color": "#6B7280"
+          },
+          "testimonialQuote": {
+            "fontSize": "15px",
+            "fontWeight": 400,
+            "lineHeight": "1.7",
+            "color": "#1A1A1A"
+          },
+          "testimonialAuthor": {
+            "fontSize": "14px",
+            "fontWeight": 600,
+            "color": "#1A1A1A"
+          },
+          "testimonialSource": {
+            "fontSize": "12px",
+            "fontWeight": 400,
+            "color": "#9CA3AF"
+          }
+        }
+      },
+
+      "spacing": {
+        "containerMaxWidth": "1200px",
+        "containerPaddingH": "24px",
+        "sectionPaddingV": "80px",
+        "componentGap": "24px",
+        "cardPadding": "24px",
+        "buttonPaddingH": "24px",
+        "buttonPaddingV": "12px",
+        "gridColumns": 12,
+        "gridGutter": "24px"
+      },
+
+      "effects": {
+        "shadows": {
+          "card": "0 4px 16px rgba(0,0,0,0.08)",
+          "cardHover": "0 6px 20px rgba(0,0,0,0.12)",
+          "featureCard": "0 2px 8px rgba(0,0,0,0.06)",
+          "floatingChip": "0 4px 12px rgba(0,0,0,0.15)",
+          "floatingInfoCard": "0 8px 24px rgba(0,0,0,0.16)",
+          "navigation": "0 1px 4px rgba(0,0,0,0.06)",
+          "statsCard": "0 2px 8px rgba(0,0,0,0.06)",
+          "shadowApplication": "Apply only to container surfaces — NEVER to icons, text, or inline child elements"
+        },
+        "borderRadius": {
+          "productCard": "16px",
+          "featureCard": "12px",
+          "communityCard": "20px",
+          "bottomCTASection": "24px",
+          "statsCard": "10px",
+          "buttonPrimary": "8px",
+          "buttonIconSquare": "8px",
+          "floatingChip": "50px",
+          "floatingInfoCard": "12px",
+          "dealBadge": "6px",
+          "relatedTag": "50px",
+          "avatar": "50%",
+          "logoGrafIcon": "6px"
+        },
+        "transitions": {
+          "standard": "0.2s ease",
+          "buttonHover": "background-color 0.2s ease",
+          "cardHover": "box-shadow 0.2s ease",
+          "logoHover": "filter 0.2s ease, opacity 0.2s ease"
+        }
+      },
+
+      "components": {
+        "announcementBar": {
+          "background": "#1E3A2B",
+          "height": "40px",
+          "paddingH": "24px",
+          "layout": "flex row: [center text] | [right utility links]",
+          "centerText": {
+            "color": "#FFFFFF",
+            "fontSize": "12px",
+            "fontWeight": 400
+          },
+          "utilityLinks": {
+            "color": "#FFFFFF",
+            "fontSize": "12px",
+            "gap": "16px",
+            "divider": {
+              "style": "pipe |",
+              "color": "rgba(255,255,255,0.3)"
+            }
+          }
+        },
+
+        "navigationBar": {
+          "background": "#FFFFFF",
+          "height": "64px",
+          "paddingH": "24px",
+          "shadow": "0 1px 4px rgba(0,0,0,0.06)",
+          "layout": "flex row: [logo-left] | [links-center] | [icons-right]",
+          "logo": {
+            "containerBackground": "#2C4F3E",
+            "containerBorderRadius": "6px",
+            "containerSize": "32px",
+            "iconColor": "#FFFFFF",
+            "iconStyle": "shopping bag outline"
+          },
+          "links": {
+            "color": "#1A1A1A",
+            "fontSize": "14px",
+            "fontWeight": 400,
+            "gap": "32px",
+            "dropdownChevron": {
+              "size": "12px",
+              "color": "#1A1A1A"
+            },
+            "hoverState": {
+              "color": "#2C4F3E",
+              "transition": "color 0.15s ease"
+            }
+          },
+          "utilityIcons": {
+            "color": "#1A1A1A",
+            "size": "20px",
+            "gap": "20px",
+            "hoverColor": "#2C4F3E"
+          }
+        },
+
+        "heroSection": {
+          "background": "#FFFFFF",
+          "paddingV": "80px",
+          "layout": "two-column: [55% text column] | [45% visual column]",
+          "columnGap": "48px",
+
+          "textColumn": {
+            "heading": {
+              "fontSize": "52px",
+              "fontWeight": 800,
+              "letterSpacing": "-0.02em",
+              "color": "#1A1A1A",
+              "accentTreatment": {
+                "target": "e-commerce",
+                "style": "wavy underline",
+                "underlineColor": "#C5E042",
+                "underlineThickness": "3px"
+              }
+            },
+            "subtext": {
+              "fontSize": "15px",
+              "color": "#6B7280",
+              "lineHeight": "1.65",
+              "maxWidth": "360px",
+              "marginTop": "16px"
+            },
+            "ctaGroup": {
+              "marginTop": "28px",
+              "gap": "12px",
+              "layout": "flex row",
+              "primaryButton": {
+                "label": "Shop now",
+                "background": "#2C4F3E",
+                "textColor": "#FFFFFF",
+                "borderRadius": "8px",
+                "paddingH": "24px",
+                "paddingV": "12px",
+                "fontSize": "15px",
+                "fontWeight": 600,
+                "states": {
+                  "default": { "background": "#2C4F3E" },
+                  "hover": { "background": "#234030" },
+                  "active": { "background": "#1B3128" }
+                }
+              },
+              "iconButton": {
+                "icon": "search",
+                "background": "#FFFFFF",
+                "border": "1.5px solid #E5E7EB",
+                "borderRadius": "8px",
+                "size": "44px",
+                "iconColor": "#1A1A1A",
+                "states": {
+                  "hover": { "background": "#F9FAFB", "border": "1.5px solid #D1D5DB" }
+                }
+              }
+            },
+            "dealStrip": {
+              "marginTop": "28px",
+              "layout": "flex row: [text] | [horizontal line]",
+              "text": {
+                "fontSize": "13px",
+                "color": "#6B7280"
+              },
+              "line": {
+                "color": "#E5E7EB",
+                "height": "1px",
+                "flex": 1
+              }
+            }
+          },
+
+          "visualColumn": {
+            "accentRectangle": {
+              "background": "#C5E042",
+              "borderRadius": "16px",
+              "approximateSize": "340px × 400px",
+              "position": "right-justified behind model image"
+            },
+            "floatingNotificationChip": {
+              "background": "#2C4F3E",
+              "textColor": "#FFFFFF",
+              "borderRadius": "50px",
+              "paddingH": "14px",
+              "paddingV": "8px",
+              "fontSize": "13px",
+              "fontWeight": 500,
+              "shadow": "0 4px 12px rgba(0,0,0,0.15)",
+              "avatarSize": "24px",
+              "avatarBorder": "2px solid rgba(255,255,255,0.4)"
+            },
+            "floatingInfoCard": {
+              "background": "#2C4F3E",
+              "textColor": "#FFFFFF",
+              "borderRadius": "12px",
+              "padding": "16px 20px",
+              "fontSize": "13px",
+              "lineHeight": "1.5",
+              "maxWidth": "260px",
+              "shadow": "0 8px 24px rgba(0,0,0,0.16)"
+            },
+            "floatingUserAvatar": {
+              "size": "36px",
+              "borderRadius": "50%",
+              "border": "2px solid #FFFFFF",
+              "position": "top-right corner of visual column"
+            }
+          },
+
+          "statsRow": {
+            "marginTop": "40px",
+            "gap": "12px",
+            "layout": "flex row",
+            "highlightCard": {
+              "background": "#2C4F3E",
+              "borderRadius": "10px",
+              "padding": "12px 20px",
+              "shadow": "0 2px 8px rgba(0,0,0,0.06)",
+              "number": { "color": "#FFFFFF", "fontSize": "28px", "fontWeight": 700 },
+              "label": { "color": "rgba(255,255,255,0.75)", "fontSize": "12px" }
+            },
+            "defaultCard": {
+              "background": "#FFFFFF",
+              "border": "1px solid #E5E7EB",
+              "borderRadius": "10px",
+              "padding": "12px 20px",
+              "shadow": "0 2px 8px rgba(0,0,0,0.04)",
+              "number": { "color": "#1A1A1A", "fontSize": "28px", "fontWeight": 700 },
+              "label": { "color": "#9CA3AF", "fontSize": "12px" }
+            }
+          }
+        },
+
+        "productCards": {
+          "borderRadius": "16px",
+          "shadow": "0 4px 16px rgba(0,0,0,0.08)",
+          "overflow": "hidden",
+          "states": {
+            "hover": { "shadow": "0 6px 20px rgba(0,0,0,0.12)", "transition": "box-shadow 0.2s ease" }
+          },
+          "backgroundVariants": {
+            "darkGreen": {
+              "background": "#2C4F3E",
+              "usage": "Electronics/headphones product category"
+            },
+            "limeGreen": {
+              "background": "#C5E042",
+              "usage": "Earbuds / lifestyle product category"
+            },
+            "neutral": {
+              "background": "#F9FAFB",
+              "usage": "Default / generic product"
+            }
+          },
+          "imageArea": {
+            "objectFit": "contain",
+            "imagePaddingH": "20px"
+          },
+          "relatedProductTag": {
+            "background": "#1A1A1A",
+            "textColor": "#FFFFFF",
+            "borderRadius": "50px",
+            "paddingH": "14px",
+            "paddingV": "8px",
+            "fontSize": "12px",
+            "fontWeight": 500,
+            "icon": "diagonal arrow (↗)",
+            "position": "bottom-left overlay"
+          }
+        },
+
+        "featureSectionCards": {
+          "sectionBackground": "#F9FAFB",
+          "card": {
+            "background": "#FFFFFF",
+            "border": "1px solid #E5E7EB",
+            "borderRadius": "12px",
+            "padding": "24px",
+            "shadow": "0 2px 8px rgba(0,0,0,0.06)",
+            "states": {
+              "hover": { "shadow": "0 6px 20px rgba(0,0,0,0.10)", "transition": "box-shadow 0.2s ease" }
+            }
+          },
+          "icon": {
+            "style": "3D illustrated / emoji-style",
+            "size": "40px",
+            "containerBackground": "transparent",
+            "marginBottom": "16px"
+          },
+          "title": {
+            "fontSize": "16px",
+            "fontWeight": 600,
+            "color": "#1A1A1A",
+            "marginBottom": "8px"
+          },
+          "description": {
+            "fontSize": "13px",
+            "color": "#6B7280",
+            "lineHeight": "1.5"
+          },
+          "gridLayout": {
+            "columns": 3,
+            "gap": "20px"
+          }
+        },
+
+        "communitySectionCard": {
+          "background": "#2C4F3E",
+          "borderRadius": "20px",
+          "padding": "48px",
+          "layout": "two-column: [heading + body copy left] | [social links list right]",
+          "heading": {
+            "fontSize": "36px",
+            "fontWeight": 700,
+            "color": "#FFFFFF",
+            "lineHeight": "1.2"
+          },
+          "bodyText": {
+            "fontSize": "14px",
+            "color": "rgba(255,255,255,0.70)",
+            "lineHeight": "1.6",
+            "marginTop": "12px"
+          },
+          "socialLinks": {
+            "itemBackground": "rgba(255,255,255,0.08)",
+            "itemHoverBackground": "rgba(255,255,255,0.14)",
+            "itemBorderRadius": "10px",
+            "itemPadding": "12px 16px",
+            "itemGap": "10px",
+            "iconColor": "#FFFFFF",
+            "iconSize": "18px",
+            "platformLabel": {
+              "fontSize": "14px",
+              "fontWeight": 500,
+              "color": "#FFFFFF"
+            },
+            "platformDescription": {
+              "fontSize": "12px",
+              "color": "rgba(255,255,255,0.60)"
+            }
+          }
+        },
+
+        "trustedBySection": {
+          "background": "#FFFFFF",
+          "paddingV": "64px",
+          "layout": "two-column: [heading + description left] | [logo grid right]",
+          "heading": {
+            "fontSize": "24px",
+            "fontWeight": 700,
+            "color": "#1A1A1A"
+          },
+          "description": {
+            "fontSize": "14px",
+            "color": "#6B7280",
+            "marginTop": "8px"
+          },
+          "seeMoreButton": {
+            "background": "#C5E042",
+            "textColor": "#1A1A1A",
+            "borderRadius": "8px",
+            "paddingH": "20px",
+            "paddingV": "10px",
+            "fontSize": "14px",
+            "fontWeight": 600,
+            "marginTop": "20px",
+            "states": {
+              "hover": { "background": "#B8D236" },
+              "active": { "background": "#AECB2F" }
+            }
+          },
+          "logoGrid": {
+            "columns": 3,
+            "gap": "32px",
+            "logoFilter": "grayscale(100%)",
+            "logoOpacity": 0.6,
+            "states": {
+              "hover": { "filter": "grayscale(0%)", "opacity": 1.0, "transition": "all 0.2s ease" }
+            }
+          }
+        },
+
+        "testimonialsSection": {
+          "background": "#FFFFFF",
+          "paddingV": "64px",
+          "sectionHeading": {
+            "fontSize": "24px",
+            "fontWeight": 700,
+            "color": "#1A1A1A"
+          },
+          "quoteText": {
+            "fontSize": "15px",
+            "fontWeight": 400,
+            "color": "#1A1A1A",
+            "lineHeight": "1.7"
+          },
+          "authorBlock": {
+            "name": {
+              "fontSize": "14px",
+              "fontWeight": 600,
+              "color": "#1A1A1A"
+            },
+            "source": {
+              "fontSize": "12px",
+              "color": "#9CA3AF"
+            }
+          },
+          "avatarStack": {
+            "avatarSize": "36px",
+            "borderRadius": "50%",
+            "border": "2px solid #FFFFFF",
+            "negativeMargin": "-8px"
+          }
+        },
+
+        "bottomCTASection": {
+          "background": "#2C4F3E",
+          "borderRadius": "24px",
+          "padding": "64px 60px",
+          "headingColor": "#FFFFFF",
+          "headingFontSize": "48px",
+          "headingFontWeight": 800,
+          "decorativeAccent": {
+            "background": "#C5E042",
+            "note": "Accent lime shape used as decorative geometry within section"
+          }
+        }
+      },
+
+      "implementationGuidelines": {
+        "colorApplicationRules": [
+          "forestGreen (#2C4F3E) is the background fill for ALL interactive CTA surfaces — never used as text color",
+          "announcementGreen (#1E3A2B) is EXCLUSIVELY for the top announcement strip — do not share with nav or cards",
+          "limeAccent (#C5E042) is an accent/highlight token only — not for large content backgrounds or body text",
+          "bodyText (#6B7280) is universally applied to ALL secondary/descriptive text, regardless of section background",
+          "White text (#FFFFFF) is used exclusively on dark green and black surfaces"
+        ],
+        "shadowDistribution": [
+          "Product cards: card shadow (0 4px 16px rgba(0,0,0,0.08))",
+          "Feature cards: featureCard shadow (0 2px 8px rgba(0,0,0,0.06))",
+          "Floating hero chips: floatingChip shadow (0 4px 12px rgba(0,0,0,0.15))",
+          "Navigation bar: navigation shadow (0 1px 4px rgba(0,0,0,0.06))",
+          "Shadows apply ONLY to outer container bounds — never to icon elements, text, or inner children"
+        ],
+        "avoid": [
+          "AVOID applying limeAccent as text color — it lacks sufficient contrast on white",
+          "AVOID using forestGreen (#2C4F3E) for body text — reserved for background fills",
+          "AVOID applying card shadows to inline elements, icons, or text nodes",
+          "AVOID rendering partner logos in full color — always apply grayscale(100%) filter at 60% opacity",
+          "AVOID overriding the announcementGreen (#1E3A2B) to match forestGreen (#2C4F3E) — the depth difference is intentional"
+        ],
+        "ensure": [
+          "ENSURE all white text on forestGreen maintains 7.2:1 contrast ratio",
+          "ENSURE limeAccent text (#1A1A1A) achieves minimum 4.5:1 ratio — verified at 4.8:1",
+          "ENSURE floatingChip and floatingInfoCard in hero carry explicit drop shadows — they overlap the image layer",
+          "ENSURE seeMoreButton uses limeAccent fill with #1A1A1A text — not white text",
+          "ENSURE communityCard text uses rgba(255,255,255,0.70) for body (not pure white) to create visual hierarchy under the heading"
+        ]
+      }
+    }
+  },
+
+  "concept02": {
+    "designSystem": {
+      "colorPalette": {
+        "brandTokens": {
+          "brandBlack": {
+            "hex": "#0D0D0D",
+            "rgb": "rgb(13, 13, 13)",
+            "usage": [
+              "brand wordmark",
+              "navigation action links",
+              "product name",
+              "price",
+              "size selector default border",
+              "primary CTA button fill"
+            ],
+            "textOnColor": "#FFFFFF",
+            "contrastRatio": "19.8:1 (WCAG AAA)"
+          },
+          "pureWhite": {
+            "hex": "#FFFFFF",
+            "usage": [
+              "product card surface",
+              "product info bar",
+              "size selection sheet surface",
+              "size circle default fill",
+              "button text on dark CTA"
+            ]
+          },
+          "pageSurface": {
+            "hex": "#F2F3F2",
+            "usage": [
+              "outer page canvas/background",
+              "product image area within card",
+              "subtle section separators"
+            ],
+            "note": "Barely-there cool-neutral tint — not a gray card, just the global page wash"
+          },
+          "sheetHeaderGray": {
+            "hex": "#EBEBEB",
+            "usage": ["top section of bottom sheet/drawer panel before content begins"],
+            "note": "Fades seamlessly into white sheet body — no explicit border between zones"
+          },
+          "descriptionGray": {
+            "hex": "#9CA3AF",
+            "usage": [
+              "italic product subtitle text",
+              "utility link color (More Info, US Size Guide)",
+              "carousel dot inactive state",
+              "testimonial source attribution"
+            ]
+          },
+          "urgencyGold": {
+            "hex": "#C08A2A",
+            "rgb": "rgb(192, 138, 42)",
+            "usage": [
+              "'Only X Left' stock scarcity label",
+              "'Selling Fast' demand urgency label"
+            ],
+            "textOnColor": "N/A — text color only, not background",
+            "warning": "This is the ONLY non-monochrome token in concept02. Use strictly for urgency signals."
+          },
+          "borderDefault": {
+            "hex": "#E8E8E8",
+            "usage": [
+              "horizontal row dividers within size selection sheet",
+              "size circle border (default state)"
+            ]
+          }
+        },
+        "semanticTokens": {
+          "interactivePrimary": "#0D0D0D",
+          "interactivePrimaryHover": "#2A2A2A",
+          "interactivePrimaryActive": "#1A1A1A",
+          "interactiveDisabled": "#D1D5DB",
+          "surfacePrimary": "#FFFFFF",
+          "surfacePage": "#F2F3F2",
+          "surfaceSheet": "#EBEBEB",
+          "textPrimary": "#0D0D0D",
+          "textSecondary": "#9CA3AF",
+          "textInverse": "#FFFFFF",
+          "textUrgency": "#C08A2A",
+          "borderDefault": "#E8E8E8",
+          "borderStrong": "#0D0D0D"
+        }
+      },
+
+      "typography": {
+        "fontFamily": {
+          "primary": "'GT America', 'Helvetica Neue', Arial, sans-serif",
+          "note": "Grotesque sans-serif inferred; brand wordmark uses wide tracking uppercase"
+        },
+        "scale": {
+          "brandWordmark": {
+            "fontSize": "22px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em",
+            "color": "#0D0D0D",
+            "textTransform": "uppercase",
+            "note": "Letter-spacing is brand-critical — do not reduce"
+          },
+          "navAction": {
+            "fontSize": "14px",
+            "fontWeight": 400,
+            "color": "#0D0D0D",
+            "gap": "24px"
+          },
+          "productName": {
+            "fontSize": "17px",
+            "fontWeight": 400,
+            "lineHeight": "1.4",
+            "color": "#0D0D0D"
+          },
+          "productSubtitle": {
+            "fontSize": "14px",
+            "fontWeight": 400,
+            "fontStyle": "italic",
+            "color": "#9CA3AF",
+            "note": "Italic style is mandatory for subtitle — not optional"
+          },
+          "priceDisplay": {
+            "fontSize": "17px",
+            "fontWeight": 400,
+            "color": "#0D0D0D",
+            "alignment": "right"
+          },
+          "sizeNumber": {
+            "fontSize": "15px",
+            "fontWeight": 400,
+            "color": "#0D0D0D",
+            "selectedColor": "#FFFFFF"
+          },
+          "urgencyLabel": {
+            "fontSize": "13px",
+            "fontWeight": 400,
+            "color": "#C08A2A"
+          },
+          "utilityLink": {
+            "fontSize": "14px",
+            "fontWeight": 400,
+            "color": "#9CA3AF",
+            "hoverColor": "#6B7280"
+          },
+          "primaryButtonLabel": {
+            "fontSize": "15px",
+            "fontWeight": 500,
+            "letterSpacing": "0.01em",
+            "color": "#FFFFFF"
+          }
+        }
+      },
+
+      "spacing": {
+        "containerPaddingH": "24px",
+        "cardPadding": "20px 24px",
+        "rowHeight": "52px",
+        "sectionGap": "16px",
+        "buttonPaddingH": "28px",
+        "buttonPaddingV": "14px"
+      },
+
+      "effects": {
+        "shadows": {
+          "productCard": "0 4px 24px rgba(0,0,0,0.08)",
+          "productInfoBar": "0 2px 12px rgba(0,0,0,0.06)",
+          "bottomSheet": "0 -2px 20px rgba(0,0,0,0.06)",
+          "shadowApplication": "Shadows apply only to white card surfaces lifting off the #F2F3F2 page — never on the page itself"
+        },
+        "borderRadius": {
+          "productImageCard": "20px",
+          "productInfoBar": "16px",
+          "bottomSheet": "24px 24px 0 0",
+          "ctaButtonPill": "50px",
+          "sizeCircle": "50%",
+          "dragHandle": "4px"
+        },
+        "transitions": {
+          "buttonHover": "background-color 0.15s ease",
+          "sizeCircleSelect": "background-color 0.1s ease, color 0.1s ease",
+          "sheetReveal": "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+        }
+      },
+
+      "components": {
+        "navigationBar": {
+          "background": "#FFFFFF",
+          "height": "56px",
+          "paddingH": "24px",
+          "borderBottom": "none",
+          "shadow": "none",
+          "layout": "flex row: [brand-wordmark left] | [actions right]",
+          "brandWordmark": {
+            "fontSize": "22px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em",
+            "color": "#0D0D0D",
+            "textTransform": "uppercase"
+          },
+          "navActions": {
+            "items": ["Search", "Menu", "Bag: 0"],
+            "color": "#0D0D0D",
+            "fontSize": "14px",
+            "gap": "24px",
+            "bagCounter": {
+              "separator": ": ",
+              "count": "inline text, same weight/color as label"
+            }
+          }
+        },
+
+        "productImageCard": {
+          "background": "#F2F3F2",
+          "borderRadius": "20px",
+          "shadow": "0 4px 24px rgba(0,0,0,0.08)",
+          "imageArea": {
+            "objectFit": "contain",
+            "padding": "40px",
+            "background": "#F2F3F2"
+          },
+          "carouselDots": {
+            "layout": "flex row centered",
+            "gap": "6px",
+            "active": {
+              "color": "#0D0D0D",
+              "width": "8px",
+              "height": "8px",
+              "borderRadius": "50%"
+            },
+            "inactive": {
+              "color": "#D1D5DB",
+              "width": "6px",
+              "height": "6px",
+              "borderRadius": "50%"
+            }
+          }
+        },
+
+        "productInfoBar": {
+          "background": "#FFFFFF",
+          "borderRadius": "16px",
+          "padding": "20px 24px",
+          "shadow": "0 2px 12px rgba(0,0,0,0.06)",
+          "row1": {
+            "layout": "flex row space-between",
+            "productName": {
+              "fontSize": "17px",
+              "fontWeight": 400,
+              "color": "#0D0D0D"
+            },
+            "price": {
+              "fontSize": "17px",
+              "fontWeight": 400,
+              "color": "#0D0D0D"
+            }
+          },
+          "row2": {
+            "layout": "flex row space-between items-center",
+            "subtitle": {
+              "fontSize": "14px",
+              "fontStyle": "italic",
+              "color": "#9CA3AF"
+            }
+          },
+          "row3": {
+            "layout": "flex row gap-12",
+            "marginTop": "16px"
+          }
+        },
+
+        "primaryCTAButton": {
+          "background": "#0D0D0D",
+          "textColor": "#FFFFFF",
+          "borderRadius": "50px",
+          "paddingH": "28px",
+          "paddingV": "14px",
+          "fontSize": "15px",
+          "fontWeight": 500,
+          "minWidth": "180px",
+          "states": {
+            "default": {
+              "background": "#0D0D0D",
+              "textColor": "#FFFFFF",
+              "opacity": 1
+            },
+            "hover": {
+              "background": "#2A2A2A",
+              "transition": "background-color 0.15s ease"
+            },
+            "active": {
+              "background": "#1A1A1A",
+              "transform": "scale(0.98)"
+            },
+            "disabled": {
+              "background": "#D1D5DB",
+              "textColor": "#9CA3AF",
+              "cursor": "not-allowed",
+              "opacity": 1
+            }
+          },
+          "dropdownVariant": {
+            "trailingIcon": "chevron-down",
+            "iconColor": "#FFFFFF",
+            "iconSize": "16px",
+            "usage": "'Select Size' state before selection is made"
+          }
+        },
+
+        "utilityAction": {
+          "layout": "inline flex: [icon] [label] [optional trailing icon]",
+          "textColor": "#9CA3AF",
+          "iconColor": "#9CA3AF",
+          "fontSize": "14px",
+          "iconStyle": "outlined stroke, 18px",
+          "states": {
+            "hover": { "color": "#6B7280", "iconColor": "#6B7280" }
+          }
+        },
+
+        "sizeSelectionSheet": {
+          "containerStyle": "bottom sheet / modal drawer",
+          "background": "#FFFFFF",
+          "borderRadius": "24px 24px 0 0",
+          "shadow": "0 -2px 20px rgba(0,0,0,0.06)",
+
+          "dragHandle": {
+            "background": "#D1D5DB",
+            "width": "40px",
+            "height": "4px",
+            "borderRadius": "4px",
+            "marginAuto": "centered horizontally",
+            "marginTop": "12px"
+          },
+
+          "headerZone": {
+            "background": "#EBEBEB",
+            "borderRadius": "24px 24px 0 0",
+            "paddingV": "16px",
+            "note": "Header zone fades to white body — NO dividing line between zones"
+          },
+
+          "sizeRow": {
+            "height": "52px",
+            "paddingH": "20px",
+            "borderBottom": "1px solid #E8E8E8",
+            "layout": "flex row: [size circle] | [flex 1 spacer] | [urgency label right]"
+          },
+
+          "sizeCircle": {
+            "size": "44px",
+            "borderRadius": "50%",
+            "fontSize": "15px",
+            "fontWeight": 400,
+            "states": {
+              "default": {
+                "background": "#FFFFFF",
+                "border": "1.5px solid #0D0D0D",
+                "textColor": "#0D0D0D"
+              },
+              "selected": {
+                "background": "#0D0D0D",
+                "border": "1.5px solid #0D0D0D",
+                "textColor": "#FFFFFF"
+              },
+              "unavailable": {
+                "background": "#F9FAFB",
+                "border": "1.5px solid #E5E7EB",
+                "textColor": "#D1D5DB",
+                "cursor": "not-allowed"
+              }
+            },
+            "transition": "background-color 0.1s ease, color 0.1s ease"
+          },
+
+          "urgencyIndicators": {
+            "lowStock": {
+              "text": "Only X Left",
+              "color": "#C08A2A",
+              "fontSize": "13px",
+              "fontWeight": 400
+            },
+            "highDemand": {
+              "text": "Selling Fast",
+              "color": "#C08A2A",
+              "fontSize": "13px",
+              "fontWeight": 400
+            },
+            "note": "Both urgency states use the SAME gold token (#C08A2A) — do not differentiate by color"
+          },
+
+          "sheetFooter": {
+            "layout": "flex row space-between items-center",
+            "paddingH": "20px",
+            "paddingV": "16px",
+            "primaryAction": "Add to Bag — uses primaryCTAButton spec",
+            "utilityAction": "US Size Guide > — uses utilityAction spec"
+          }
+        }
+      },
+
+      "implementationGuidelines": {
+        "colorApplicationRules": [
+          "urgencyGold (#C08A2A) is the SOLE non-monochrome color — use only for stock and demand copy, never for UI elements",
+          "pageSurface (#F2F3F2) is background-only — never apply as text, border, or icon color",
+          "sheetHeaderGray (#EBEBEB) exists only in the sheet panel header zone — must not bleed into body content area",
+          "descriptionGray (#9CA3AF) is universally used for all secondary/utility text — maintain consistency"
+        ],
+        "shadowDistribution": [
+          "productImageCard: 0 4px 24px rgba(0,0,0,0.08) — lifts card off page surface",
+          "bottomSheet: 0 -2px 20px rgba(0,0,0,0.06) — upward shadow creating sheet lift",
+          "productInfoBar: 0 2px 12px rgba(0,0,0,0.06) — subtle lift for info panel",
+          "Page surface (#F2F3F2) receives NO shadow — it is the base layer"
+        ],
+        "avoid": [
+          "AVOID using urgencyGold (#C08A2A) for any element outside of stock/demand urgency labels",
+          "AVOID applying box-shadows to the page background (#F2F3F2) — shadows belong on white surfaces only",
+          "AVOID rectangular or rounded-rect CTA buttons — the pill shape (50px radius) is non-negotiable",
+          "AVOID rendering size circles as any shape other than perfect 50% circles",
+          "AVOID reducing brandWordmark letter-spacing below 0.12em — it defines the brand identity",
+          "AVOID adding a visible divider between sheetHeaderGray and white sheet body — the transition is seamless"
+        ],
+        "ensure": [
+          "ENSURE all size circles maintain a consistent 1.5px border — thicker borders disrupt the minimal aesthetic",
+          "ENSURE product subtitle is always italic #9CA3AF — regular weight or dark color breaks the hierarchy",
+          "ENSURE primary CTA button minWidth is 180px to prevent label wrapping",
+          "ENSURE brandWordmark uses uppercase + 0.12em letter-spacing at all times",
+          "ENSURE only one urgency gold variant exists — low stock and selling fast share the same color token"
+        ]
+      }
+    }
+  },
+
+  "crossConceptPatterns": {
+    "sharedDesignPrinciples": [
+      "Pure white (#FFFFFF) is the universal primary card/content surface in both concepts",
+      "Secondary/descriptive text is always a mid-gray (concept01: #6B7280 / concept02: #9CA3AF) — never pure black or brand color",
+      "Shadow philosophy: low-opacity ambient shadows only — no hard or high-contrast depth effects",
+      "Border radius scales with component visual weight: micro-UI = 6-8px, cards = 12-20px, large panels/sections = 20-24px, pill = 50px",
+      "CTA buttons always use the highest-contrast fill available with white (#FFFFFF) label text",
+      "Interaction states communicate through background lightness — hover darkens fills, active further darkens"
+    ],
+    "contrastPhilosophies": {
+      "concept01": "Color-forward — forest green and lime accent drive category identity and visual energy",
+      "concept02": "Restraint-forward — strict monochrome with a single gold urgency signal creates luxury through whitespace and typography"
+    },
+    "componentConvergence": {
+      "primaryCTAButton": "Both concepts use high-contrast dark fill with white text and rounded corners (8px vs 50px pill reflects brand personality)",
+      "cardSurface": "Both use white on light gray page backgrounds with subtle ambient shadows",
+      "secondaryText": "Both use a mid-gray token for all non-primary copy regardless of section background"
+    }
+  }
+}

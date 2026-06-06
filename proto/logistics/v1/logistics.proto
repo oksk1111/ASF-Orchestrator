@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package logistics.v1;
+
+option go_package = "github.com/asf-orchestrator/logistics/v1;logisticsv1";
+
+service LogisticsService {
+  rpc CalculateRoute(CalculateRouteRequest) returns (CalculateRouteResponse);
+}
+
+message Coordinate {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+message DeliveryDestination {
+  string destination_id = 1;
+  Coordinate coordinate = 2;
+  double demand_weight_kg = 3;
+}
+
+message CalculateRouteRequest {
+  string warehouse_id = 1;
+  Coordinate warehouse_coordinate = 2;
+  repeated DeliveryDestination destinations = 3;
+  double vehicle_max_capacity_kg = 4;
+}
+
+message OptimizedRoute {
+  int32 route_index = 1;
+  repeated string path_destination_ids = 2;
+  double total_distance_meters = 3;
+  double total_travel_time_seconds = 4;
+  double co2_emitted_kg = 5;
+}
+
+message CalculateRouteResponse {
+  string warehouse_id = 1;
+  repeated OptimizedRoute optimized_routes = 2;
+  double base_co2_reduction_percentage = 3;
+}

@@ -1,0 +1,31 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Node
+node_modules/
+npm-debug.log*
+*.tsbuildinfo
+
+# Build outputs
+build/
+dist/
+coverage/
+
+# Mobile
+.expo/
+.expo-shared/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

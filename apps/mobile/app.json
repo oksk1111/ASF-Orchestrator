@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "ASF Orchestrator",
+    "slug": "asf-orchestrator",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"]
+  }
+}

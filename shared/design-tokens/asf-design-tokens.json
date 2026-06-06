@@ -1,0 +1,53 @@
+{
+  "concept01": {
+    "colors": {
+      "announcementGreen": "#1E3A2B",
+      "forestGreen": "#2C4F3E",
+      "limeAccent": "#C5E042",
+      "pageWhite": "#FFFFFF",
+      "canvasSurface": "#F5F7F5",
+      "headingText": "#1A1A1A",
+      "bodyText": "#6B7280",
+      "subtleBackground": "#F9FAFB",
+      "borderSubtle": "#E5E7EB",
+      "partnerLogoGray": "#9CA3AF"
+    },
+    "typography": {
+      "fontFamily": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "heroHeading": "52px",
+      "sectionHeading": "32px",
+      "bodyRegular": "15px",
+      "bodySmall": "13px"
+    },
+    "radius": {
+      "card": "16px",
+      "featureCard": "12px",
+      "communityCard": "20px",
+      "button": "8px"
+    }
+  },
+  "concept02": {
+    "colors": {
+      "brandBlack": "#0D0D0D",
+      "pureWhite": "#FFFFFF",
+      "pageSurface": "#F2F3F2",
+      "sheetHeaderGray": "#EBEBEB",
+      "descriptionGray": "#9CA3AF",
+      "urgencyGold": "#C08A2A",
+      "borderDefault": "#E8E8E8"
+    },
+    "typography": {
+      "fontFamily": "'GT America', 'Helvetica Neue', Arial, sans-serif",
+      "productName": "17px",
+      "productSubtitle": "14px",
+      "urgencyLabel": "13px"
+    },
+    "radius": {
+      "productImageCard": "20px",
+      "productInfoBar": "16px",
+      "bottomSheet": "24px",
+      "ctaButtonPill": "50px",
+      "sizeCircle": "50%"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "asf-orchestrator-platform",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/web",
+    "apps/mobile"
+  ],
+  "scripts": {
+    "web:dev": "npm --workspace apps/web run dev",
+    "web:build": "npm --workspace apps/web run build",
+    "web:lint": "npm --workspace apps/web run lint",
+    "mobile:start": "npm --workspace apps/mobile run start",
+    "mobile:typecheck": "npm --workspace apps/mobile run typecheck"
+  }
+}

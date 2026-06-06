@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: ../services/backend
+      dockerfile: Dockerfile
+    container_name: asf-backend
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: dev
+      JWT_SECRET: asf-dev-secret-change-me
+      RATE_LIMIT_PER_MINUTE: 120
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+
+  postgres:
+    image: postgres:16
+    container_name: asf-postgres
+    environment:
+      POSTGRES_DB: asf
+      POSTGRES_USER: asf
+      POSTGRES_PASSWORD: asf
+    ports:
+      - "5432:5432"
+    volumes:
+      - asf-postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: asf-redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: asf-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  asf-postgres-data:
