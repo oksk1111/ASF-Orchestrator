@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app/main.py"
+    }
+  ],
+  "env": {
+    "MAFRA_API_KEY": "@mafra_api_key",
+    "KAMIS_API_KEY": "@kamis_api_key",
+    "KAMIS_API_ID": "@kamis_api_id",
+    "JWT_SECRET": "@jwt_secret",
+    "APP_ENV": "production"
+  }
+}

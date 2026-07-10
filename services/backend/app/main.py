@@ -5,12 +5,27 @@ from threading import Lock
 from time import perf_counter, time
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from app.api.routes import api_router
 from app.core.config import settings
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://asf-web.vercel.app",
+        "https://*.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(api_router, prefix="/api/v1")
 
 _rate_buckets: dict[str, deque[float]] = defaultdict(deque)

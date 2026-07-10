@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "installCommand": "npm install --workspace apps/web",
   "buildCommand": "npm run web:build",
   "outputDirectory": "apps/web/dist",
+  "env": {
+    "VITE_API_URL": "@fresh_alert_api_url"
+  },
   "rewrites": [
-    { "source": "/api/v1/:path*", "destination": "/api/index" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
