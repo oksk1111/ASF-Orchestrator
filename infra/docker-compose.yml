@@ -10,10 +10,49 @@ services:
       APP_ENV: dev
       JWT_SECRET: asf-dev-secret-change-me
       RATE_LIMIT_PER_MINUTE: 120
+      MAFRA_API_KEY: ${MAFRA_API_KEY:-sample}
+      KAMIS_API_KEY: ${KAMIS_API_KEY}
+      KAMIS_API_ID: ${KAMIS_API_ID:-5129}
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
     depends_on:
       - postgres
       - redis
       - rabbitmq
+
+  celery-worker:
+    build:
+      context: ../services/backend
+      dockerfile: Dockerfile
+    container_name: asf-celery-worker
+    command: celery -A app.services.fresh_alert.celery_app worker --loglevel=info
+    environment:
+      APP_ENV: dev
+      MAFRA_API_KEY: ${MAFRA_API_KEY:-sample}
+      KAMIS_API_KEY: ${KAMIS_API_KEY}
+      KAMIS_API_ID: ${KAMIS_API_ID:-5129}
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    depends_on:
+      - redis
+      - postgres
+
+  celery-beat:
+    build:
+      context: ../services/backend
+      dockerfile: Dockerfile
+    container_name: asf-celery-beat
+    command: celery -A app.services.fresh_alert.celery_app beat --loglevel=info
+    environment:
+      APP_ENV: dev
+      MAFRA_API_KEY: ${MAFRA_API_KEY:-sample}
+      KAMIS_API_KEY: ${KAMIS_API_KEY}
+      KAMIS_API_ID: ${KAMIS_API_ID:-5129}
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    depends_on:
+      - redis
+      - celery-worker
 
   postgres:
     image: postgres:16

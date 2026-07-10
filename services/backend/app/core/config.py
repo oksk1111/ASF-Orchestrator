@@ -23,10 +23,17 @@ class Settings(BaseSettings):
     # FreshAlert settings
     mafra_api_key: str = "sample"
     kamis_api_key: str = ""
-    kamis_api_id: str = ""
+    kamis_api_id: str = "5129"
     fresh_alert_notify_time: str = "07:00"
     fresh_alert_recommend_top_n: int = 5
     fresh_alert_default_threshold: float = -15.0
+
+    # Celery
+    celery_broker_url: str = "redis://localhost:6379/0"
+    celery_result_backend: str = "redis://localhost:6379/1"
+
+    # Firebase (FCM)
+    google_application_credentials: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",
