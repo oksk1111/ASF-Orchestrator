@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from app.repositories.in_memory import repo
 from app.services.checkout import CheckoutService
 from app.services.forecasting import ForecastingService

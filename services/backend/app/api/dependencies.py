@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from fastapi import Header
 
 from app.core.security import TokenError, decode_access_token, unauthorized

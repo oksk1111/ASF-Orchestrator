@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,6 +19,14 @@ class Settings(BaseSettings):
     # Dynamic pricing constraints
     min_discount_rate: float = 0.05
     max_discount_rate: float = 0.30
+
+    # FreshAlert settings
+    mafra_api_key: str = "sample"
+    kamis_api_key: str = ""
+    kamis_api_id: str = ""
+    fresh_alert_notify_time: str = "07:00"
+    fresh_alert_recommend_top_n: int = 5
+    fresh_alert_default_threshold: float = -15.0
 
     model_config = SettingsConfigDict(
         env_file=".env",

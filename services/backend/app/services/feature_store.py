@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import hashlib
 
 from app.domain.models import Product, UserProfile

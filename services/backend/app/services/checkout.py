@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from app.domain.models import CheckoutEnvelope, CheckoutRequest, CheckoutResponse
 from app.repositories.in_memory import InMemoryRepository
 from app.services.pricing import apply_dynamic_pricing
