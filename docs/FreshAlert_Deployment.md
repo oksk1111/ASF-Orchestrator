@@ -5,13 +5,12 @@
 ### MAFRA (농림축산식품부 도매시장 데이터)
 
 - **발급처**: https://data.mafra.go.kr
-- **인증키**: `REDACTED_MAFRA_KEY`
-- **허용 IP**: `10.157.78.49` (공유기 IP)
-- **중요**: MAFRA API는 등록된 IP에서만 호출 가능. 서버 IP가 변경되면 data.mafra.go.kr에서 IP 재등록 필요.
+- **허용 IP**: `10.157.78.49` (공유기 IP) — 서버 IP 변경 시 포털에서 재등록 필요
+- **중요**: MAFRA API는 등록된 IP에서만 호출 가능.
 
 ```bash
-# .env 파일에 설정
-MAFRA_API_KEY=REDACTED_MAFRA_KEY
+# .env 파일에 설정 (키는 .env에만 저장, 절대 커밋 금지)
+MAFRA_API_KEY=<data.mafra.go.kr에서 발급받은 키>
 ```
 
 > ⚠️ **IP 화이트리스트 주의사항**
@@ -28,7 +27,8 @@ MAFRA_API_KEY=REDACTED_MAFRA_KEY
 - **IP 제한**: 없음 (어디서든 호출 가능)
 
 ```bash
-KAMIS_API_KEY=REDACTED_KAMIS_KEY
+# .env 파일에 설정 (키는 .env에만 저장, 절대 커밋 금지)
+KAMIS_API_KEY=<data.go.kr에서 발급받은 일반 인증키(Decoding)>
 KAMIS_API_ID=5129
 ```
 
@@ -87,9 +87,9 @@ celery -A app.services.fresh_alert.celery_app beat --loglevel=info
 ```bash
 cd infra
 
-# 환경변수 설정 (.env 파일 또는 export)
-export MAFRA_API_KEY=REDACTED_MAFRA_KEY
-export KAMIS_API_KEY="REDACTED_KAMIS_KEY"
+# 환경변수 설정 (.env 파일 또는 export — 키 값은 직접 입력)
+export MAFRA_API_KEY=<MAFRA 인증키>
+export KAMIS_API_KEY=<KAMIS 인증키>
 export KAMIS_API_ID=5129
 
 # 전체 서비스 실행

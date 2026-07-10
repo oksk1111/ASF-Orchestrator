@@ -40,10 +40,10 @@
 5. **Environment Variables** 탭에서 한 번에 추가:
 
 ```
-MAFRA_API_KEY=REDACTED_MAFRA_KEY
-KAMIS_API_KEY=REDACTED_KAMIS_KEY
+MAFRA_API_KEY=<data.mafra.go.kr에서 발급한 키>
+KAMIS_API_KEY=<data.go.kr에서 발급한 일반 인증키(Decoding)>
 KAMIS_API_ID=5129
-JWT_SECRET=[32자 이상 강력한 문자열 생성]
+JWT_SECRET=<32자 이상 강력한 랜덤 문자열>
 APP_ENV=production
 ```
 

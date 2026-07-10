@@ -90,10 +90,10 @@ Vercel이 `requirements.txt`에서 자동으로 감지:
 
 | 이름 | 값 | 환경 |
 |------|-----|------|
-| `MAFRA_API_KEY` | `REDACTED_MAFRA_KEY` | Production |
-| `KAMIS_API_KEY` | `REDACTED_KAMIS_KEY` | Production |
+| `MAFRA_API_KEY` | `<data.mafra.go.kr에서 발급한 키>` | Production |
+| `KAMIS_API_KEY` | `<data.go.kr에서 발급한 일반 인증키(Decoding)>` | Production |
 | `KAMIS_API_ID` | `5129` | Production |
-| `JWT_SECRET` | `[32자 이상 랜덤 문자열]` | Production |
+| `JWT_SECRET` | `<32자 이상 랜덤 문자열>` | Production |
 | `APP_ENV` | `production` | Production |
 
 > **주의:** 
