@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="grid stats">
+  <div class="card stat">
+    <b>{{ total_records }}</b>
+    <span>캐시 레코드</span>
+  </div>
+  {% for s in summaries %}
+  <div class="card stat">
+    <b>{{ s.record_count }}</b>
+    <span>{{ s.source }} · 최신 {{ s.latest_sale_date or "-" }}</span>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="card">
+  <h2>데이터 소스</h2>
+  <table>
+    <thead>
+      <tr><th>소스</th><th>상태</th><th>설명</th><th>수집</th></tr>
+    </thead>
+    <tbody>
+      {% for src in sources %}
+      <tr>
+        <td><strong>{{ src.name }}</strong></td>
+        <td>
+          {% if src.configured %}
+            <span class="badge ok">준비됨</span>
+          {% else %}
+            <span class="badge off">키 없음</span>
+          {% endif %}
+        </td>
+        <td class="muted">{{ src.desc }}</td>
+        <td>
+          <form method="post" action="/admin/collect">
+            <input type="hidden" name="source" value="{{ src.name }}" />
+            <button type="submit">수집</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <form method="post" action="/admin/collect" class="collect-all">
+    <input type="hidden" name="source" value="ALL" />
+    <button type="submit" class="primary">활성 소스 전체 수집</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>최근 수집 로그</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>소스</th><th>상태</th><th>수집</th><th>저장</th><th>시작</th><th>메시지</th></tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.id }}</td>
+        <td>{{ log.source }}</td>
+        <td>
+          {% if log.status == "success" %}<span class="badge ok">성공</span>
+          {% elif log.status == "error" %}<span class="badge err">실패</span>
+          {% else %}<span class="badge">진행</span>{% endif %}
+        </td>
+        <td>{{ log.fetched }}</td>
+        <td>{{ log.saved }}</td>
+        <td class="muted">{{ log.started_at[:19] }}</td>
+        <td class="muted">{{ log.message }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="muted">수집 로그가 없습니다</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

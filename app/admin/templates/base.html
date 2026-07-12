@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ app_name }} · Admin</title>
+    <link rel="stylesheet" href="/admin/static/admin.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">🍃 {{ app_name }} <span>Admin</span></div>
+      <nav>
+        <a href="/admin">대시보드</a>
+        <a href="/admin/prices">캐시 데이터</a>
+        <a href="/docs" target="_blank">API 문서</a>
+      </nav>
+    </header>
+    <main class="container">
+      {% if msg %}<div class="flash">{{ msg }}</div>{% endif %}
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="foot">ASF-Orchestrator — 농식품 공공데이터 오케스트레이션 중간 서버</footer>
+  </body>
+</html>

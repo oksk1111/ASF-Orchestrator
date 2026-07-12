@@ -1,0 +1,15 @@
+[Unit]
+Description=ASF-Orchestrator middle data server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/asf-orchestrator
+Environment=PATH=/opt/asf-orchestrator/.venv/bin
+ExecStart=/opt/asf-orchestrator/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8100
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
