@@ -64,8 +64,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:5173",
-        "https://*.vercel.app",
     ],
+    # 로컬 개발: localhost/127.0.0.1 임의 포트 + Vercel 프리뷰 도메인
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+|https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

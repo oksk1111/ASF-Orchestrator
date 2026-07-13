@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
+  ],
+  "env": {
+    "CACHE_DB_PATH": "/tmp/cache.db",
+    "SEED_SAMPLE_ON_EMPTY": "true",
+    "COLLECT_INTERVAL_HOURS": "0",
+    "APP_ENV": "prod"
+  }
+}
