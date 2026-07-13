@@ -19,11 +19,11 @@
 
 ## 2. 방화벽/보안 목록
 
-- VCN → Security List → Ingress Rule 추가: TCP **8100** (또는 80/443)
+- VCN → Security List → Ingress Rule 추가: TCP **8000** (또는 80/443)
 - VM 내부 방화벽:
   ```bash
-  sudo iptables -I INPUT -p tcp --dport 8100 -j ACCEPT
-  sudo netfilter-persistent save   # 또는 ufw allow 8100
+  sudo iptables -I INPUT -p tcp --dport 8000 -j ACCEPT
+  sudo netfilter-persistent save   # 또는 ufw allow 8000
   ```
 
 ## 3. 앱 설치
@@ -48,15 +48,15 @@ sudo systemctl enable --now asf-orchestrator
 sudo systemctl status asf-orchestrator
 ```
 
-- 소비자 API: `http://<VM_PUBLIC_IP>:8100/api/v1/...`
-- 관리자 웹: `http://<VM_PUBLIC_IP>:8100/admin`
+- 소비자 API: `http://<VM_PUBLIC_IP>:8000/api/v1/...`
+- 관리자 웹: `http://<VM_PUBLIC_IP>:8000/admin`
 
 ## 5. (권장) HTTPS 리버스 프록시 — Caddy
 
 ```bash
 sudo apt install -y caddy
 echo 'your-domain.com {
-    reverse_proxy localhost:8100
+    reverse_proxy localhost:8000
 }' | sudo tee /etc/caddy/Caddyfile
 sudo systemctl restart caddy
 ```
@@ -67,7 +67,7 @@ sudo systemctl restart caddy
 
 ```bash
 docker build -t asf-orchestrator .
-docker run -d --name asf-orch -p 8100:8100 --env-file .env \
+docker run -d --name asf-orch -p 8000:8000 --env-file .env \
   -v $PWD/data:/app/data --restart unless-stopped asf-orchestrator
 ```
 
@@ -76,5 +76,5 @@ docker run -d --name asf-orch -p 8100:8100 --env-file .env \
 `fresh_alert` 백엔드의 `ASF_ORCHESTRATOR_BASE_URL`을 이 서버 주소로 설정:
 
 ```
-ASF_ORCHESTRATOR_BASE_URL=http://<VM_PUBLIC_IP>:8100
+ASF_ORCHESTRATOR_BASE_URL=http://<VM_PUBLIC_IP>:8000
 ```

@@ -39,12 +39,12 @@ python -m venv .venv
 .venv/Scripts/activate        # Windows
 pip install -r requirements.txt
 cp .env.example .env          # 값 채우기
-uvicorn app.main:app --reload --port 8100
+uvicorn app.main:app --reload --port 8000
 ```
 
-- 소비자 API: <http://localhost:8100/api/v1/...>
-- 관리자 웹: <http://localhost:8100/admin> (기본 계정: `.env`의 `ADMIN_USERNAME`/`ADMIN_PASSWORD`)
-- API 문서: <http://localhost:8100/docs>
+- 소비자 API: <http://localhost:8000/api/v1/...>
+- 관리자 웹: <http://localhost:8000/admin> (기본 계정: `.env`의 `ADMIN_USERNAME`/`ADMIN_PASSWORD`)
+- API 문서: <http://localhost:8000/docs>
 
 ## 배포
 
