@@ -1,4 +1,4 @@
-# AGENTS.md — ASF-Orchestrator 코딩 규칙
+# AGENTS.md — FreshAlert 코딩 규칙
 
 > 이 문서는 AI 에이전트 및 개발자가 본 프로젝트에서 코드를 작성할 때 따라야 할 규칙을 정의합니다.
 
@@ -7,23 +7,24 @@
 ## 1. 프로젝트 구조
 
 ```
-ASF-Orchestrator/
+fresh_alert/
 ├── apps/
-│   ├── web/                  # React + Vite (TypeScript)
-│   └── mobile/               # React Native + Expo (TypeScript)
+│   ├── web/                  # React + Vite (TypeScript) - B2C 웹 대시보드
+│   └── mobile/               # React Native + Expo (TypeScript) - 모바일 앱
 ├── services/
-│   └── backend/              # FastAPI (Python)
+│   └── backend/              # FastAPI (Python) - REST API 서버
 │       ├── app/
 │       │   ├── api/routes/   # API 라우트 (도메인별 파일 분리)
 │       │   ├── core/         # 설정, 보안 등 공통 모듈
 │       │   ├── domain/       # Pydantic 도메인 모델
-│       │   ├── repositories/ # 데이터 접근 계층
+│       │   ├── repositories/ # 데이터 접근 계층 (InMemory)
 │       │   └── services/     # 비즈니스 로직 (도메인별 패키지)
-│       ├── migrations/       # SQL 마이그레이션 파일
-│       └── tests/            # pytest 테스트
+│       │       └── fresh_alert/ # FreshAlert 추천/수집/스케줄링
+│       ├── migrations/       # 데이터베이스 마이그레이션 (SQL)
+│       └── tests/            # pytest 단위/통합 테스트
 ├── infra/                    # Docker, IaC
 ├── docs/                     # 기획서, 설계 문서
-├── proto/                    # gRPC proto 정의
+├── scripts/                  # 유틸리티 스크립트
 └── shared/                   # 공유 디자인 토큰
 ```
 

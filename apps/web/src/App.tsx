@@ -46,9 +46,9 @@ export default function App() {
       };
     }
     return {
-      items: basket.data.summary.total_items_count,
-      discountRate: Math.round(basket.data.summary.total_discount_rate * 100),
-      points: basket.data.summary.estimated_esg_points,
+      items: basket.data.basket.length,
+      discountRate: 0,
+      points: 0,
     };
   }, [basket]);
 
@@ -68,7 +68,7 @@ export default function App() {
 
       <div className="top-nav">
         <div className="brand-mark">A</div>
-        <strong>ASF-Orchestrator</strong>
+        <strong>FreshAlert Platform</strong>
         <ul>
           <li>Products</li>
           <li>Forecast</li>
@@ -86,7 +86,7 @@ export default function App() {
               로 연결합니다
             </h1>
             <p>
-              ASF-Orchestrator는 실시간 공급과잉 지표, 사용자 건강 목표, 물류 탄소비용을 동시에 계산해
+              FreshAlert는 실시간 신선식품 가격 모니터링 및 AI 기반 개인화 추천을 제공합니다.
               동적 가격과 친환경 배송 경로를 함께 제안합니다.
             </p>
             <div className="cta-row">
@@ -129,19 +129,18 @@ export default function App() {
             {!loading && basket && (
               <>
                 <p className="module-summary">
-                  예상 원가 {formatWon(basket.data.summary.estimated_original_price)}원 →
-                  할인 후 {formatWon(basket.data.summary.estimated_discounted_price)}원
+                  추천 품목 {basket.data.basket.length}개
                 </p>
                 <ul className="item-list">
-                  {basket.data.items.map((item) => (
-                    <li key={item.product_code}>
+                  {basket.data.basket.map((item, idx) => (
+                    <li key={idx}>
                       <div>
-                        <strong>{item.product_name}</strong>
-                        <small>{item.nutrition_match_reason}</small>
+                        <strong>{item.item_name}</strong>
+                        <small>{item.recommend_reason}</small>
                       </div>
                       <div className="price-col">
-                        <span>{formatWon(item.discounted_price)}원</span>
-                        <em>{item.oversupply_risk_level}</em>
+                        <span>{formatWon(item.avg_price)}원</span>
+                        <em>{item.category}</em>
                       </div>
                     </li>
                   ))}
@@ -154,22 +153,14 @@ export default function App() {
             <h2>VRP Logistics (B2B)</h2>
             {!loading && route && (
               <>
-                <p className="module-summary">
-                  CO2 절감률 {route.data.base_co2_reduction_percentage}%
-                </p>
+                <p className="module-summary">{route.data.message}</p>
                 <ul className="item-list">
-                  {route.data.optimized_routes.map((item) => (
-                    <li key={item.route_index}>
-                      <div>
-                        <strong>Route {item.route_index}</strong>
-                        <small>{item.path_destination_ids.join(" → ")}</small>
-                      </div>
-                      <div className="price-col">
-                        <span>{Math.round(item.total_distance_meters / 1000)}km</span>
-                        <em>{item.co2_emitted_kg}kg CO2</em>
-                      </div>
-                    </li>
-                  ))}
+                  <li>
+                    <div>
+                      <strong>Route {route.data.route_id}</strong>
+                      <small>{route.data.distance_km}km / {route.data.estimated_time_mins}분</small>
+                    </div>
+                  </li>
                 </ul>
               </>
             )}
@@ -179,11 +170,11 @@ export default function App() {
             <h2>14일 수급/가격 예측</h2>
             {!loading && forecast && (
               <div className="forecast-grid">
-                {forecast.data.map((item) => (
-                  <div key={item.product_code} className="forecast-item">
-                    <strong>{item.product_code}</strong>
-                    <span>P50 {formatWon(item.p50_predicted_price)}원</span>
-                    <span>Risk {(item.oversupply_risk_index * 100).toFixed(0)}%</span>
+                {forecast.data.forecasts.map((item, idx) => (
+                  <div key={idx} className="forecast-item">
+                    <strong>{item.item_name}</strong>
+                    <span>예상가 {formatWon(item.next_week_price)}원</span>
+                    <span>{item.trend === "up" ? "▲ 상승" : "▼ 하락"}</span>
                   </div>
                 ))}
               </div>

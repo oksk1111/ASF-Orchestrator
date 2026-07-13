@@ -1,62 +1,39 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 export interface BasketItem {
-  product_code: string;
-  product_name: string;
-  quantity: number;
-  unit: string;
-  original_price: number;
-  discounted_price: number;
-  oversupply_risk_level: string;
-  nutrition_match_reason: string;
-  esg_score_contribution: number;
+  item_name: string;
+  category: string;
+  avg_price: number;
+  recommend_reason: string;
 }
 
 export interface BasketEnvelope {
   status: "success";
   data: {
-    user_id: string;
-    basket_id: string;
-    calculated_at: string;
-    summary: {
-      total_items_count: number;
-      estimated_original_price: number;
-      estimated_discounted_price: number;
-      total_discount_rate: number;
-      estimated_esg_points: number;
-    };
-    items: BasketItem[];
-    esg_milestone: {
-      equivalent_tree_planting_factor: number;
-      co2_reduction_kg: number;
-    };
+    basket: BasketItem[];
   };
+}
+
+export interface ForecastItem {
+  item_name: string;
+  trend: string;
+  next_week_price: number;
 }
 
 export interface ForecastEnvelope {
   status: "success";
-  data: Array<{
-    product_code: string;
-    target_date: string;
-    p10_predicted_price: number;
-    p50_predicted_price: number;
-    p90_predicted_price: number;
-    oversupply_risk_index: number;
-  }>;
+  data: {
+    forecasts: ForecastItem[];
+  };
 }
 
 export interface RouteEnvelope {
   status: "success";
   data: {
-    warehouse_id: string;
-    optimized_routes: Array<{
-      route_index: number;
-      path_destination_ids: string[];
-      total_distance_meters: number;
-      total_travel_time_seconds: number;
-      co2_emitted_kg: number;
-    }>;
-    base_co2_reduction_percentage: number;
+    route_id: string;
+    estimated_time_mins: number;
+    distance_km: number;
+    message: string;
   };
 }
 

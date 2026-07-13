@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ASF Orchestrator",
-    "slug": "asf-orchestrator",
+    "name": "FreshAlert",
+    "slug": "fresh-alert",
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
