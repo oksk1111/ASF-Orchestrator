@@ -35,7 +35,9 @@ class Settings(BaseSettings):
 
     # 공공데이터 API 키
     mafra_api_key: str = "sample"
-    kamis_service_key: str = ""
+    # KAMIS(kamis.or.kr) 원본 Open API 인증키 — data.go.kr 래퍼가 아님
+    kamis_cert_key: str = ""
+    kamis_cert_id: str = "1"
 
     model_config = SettingsConfigDict(
         env_file=str(_ENV_FILE),

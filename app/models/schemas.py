@@ -29,6 +29,19 @@ class PriceRecord(BaseModel):
     collected_at: str = ""
 
 
+class PriceAlert(BaseModel):
+    """가격 알람 등록 정보."""
+
+    id: int | None = None
+    user_id: str
+    item_id: str
+    item_name: str = ""
+    target_price: int
+    direction: Literal["above", "below"]
+    active: bool = True
+    created_at: str = ""
+
+
 class CollectionLog(BaseModel):
     """수집 실행 로그."""
 

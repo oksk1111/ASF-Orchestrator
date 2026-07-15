@@ -32,7 +32,7 @@ async def run_source(source: str) -> dict:
         if source == "MAFRA":
             records = await MafraCollector(settings.mafra_api_key).collect()
         elif source == "KAMIS":
-            records = await KamisCollector(settings.kamis_service_key).collect()
+            records = await KamisCollector(settings.kamis_cert_key, settings.kamis_cert_id).collect()
         elif source == "SAMPLE":
             records = generate_sample_records()
         else:
@@ -58,7 +58,7 @@ def available_sources() -> list[str]:
     sources: list[str] = []
     if settings.mafra_api_key and settings.mafra_api_key != "sample":
         sources.append("MAFRA")
-    if settings.kamis_service_key:
+    if settings.kamis_cert_key:
         sources.append("KAMIS")
     return sources
 

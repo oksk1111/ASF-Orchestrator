@@ -36,7 +36,7 @@ cd /opt/asf-orchestrator
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp .env.example .env
-nano .env       # ADMIN_PASSWORD, MAFRA_API_KEY, KAMIS_SERVICE_KEY 설정
+nano .env       # ADMIN_PASSWORD, MAFRA_API_KEY, KAMIS_CERT_KEY 설정
 ```
 
 ## 4. systemd 서비스 등록

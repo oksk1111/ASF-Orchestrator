@@ -7,11 +7,13 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.cache import store
+from app.collectors.base import CollectorError
 from app.core.security import require_consumer
 from app.models.schemas import Envelope
+from app.services import history
 
 router = APIRouter(prefix="/api/v1", tags=["Prices"], dependencies=[Depends(require_consumer)])
 
@@ -46,6 +48,24 @@ def get_items() -> Envelope:
                 "category": r.category,
             }
     return Envelope(data=list(seen.values()))
+
+
+@router.get("/items/{item_id}/history")
+async def get_item_history(
+    item_id: str,
+    days: int = Query(default=30, ge=1, le=365, description="조회 기간(일)"),
+) -> Envelope:
+    """품목 상세화면용 기간별 가격 시계열 + 등락률을 반환한다.
+
+    - series: [{date, price}, ...] 그래프용 시계열
+    - normal_series: 평년(과거 평균) 비교선 (KAMIS 품목만 제공, 없으면 빈 배열)
+    - change_rate_1d / change_rate_period: 전일 대비 / 조회 기간 시작 대비 등락률(%)
+    """
+    try:
+        return Envelope(data=await history.get_item_history(item_id, days=days))
+    except CollectorError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
 
 
 @router.get("/sources")

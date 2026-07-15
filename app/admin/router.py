@@ -34,8 +34,8 @@ def _source_status() -> list[dict]:
         },
         {
             "name": "KAMIS",
-            "configured": bool(settings.kamis_service_key),
-            "desc": "data.go.kr 일별 도·소매 가격 (B552845/perDay)",
+            "configured": bool(settings.kamis_cert_key),
+            "desc": "kamis.or.kr 일별 부류별 도·소매 가격",
         },
         {
             "name": "SAMPLE",

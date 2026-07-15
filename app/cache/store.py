@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from app.core.config import settings
-from app.models.schemas import CollectionLog, PriceRecord, SourceSummary
+from app.models.schemas import CollectionLog, PriceAlert, PriceRecord, SourceSummary
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS price_records (
@@ -43,6 +43,18 @@ CREATE TABLE IF NOT EXISTS collection_logs (
     started_at  TEXT NOT NULL,
     finished_at TEXT
 );
+
+CREATE TABLE IF NOT EXISTS price_alerts (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id       TEXT NOT NULL,
+    item_id       TEXT NOT NULL,
+    item_name     TEXT DEFAULT '',
+    target_price  INTEGER NOT NULL,
+    direction     TEXT NOT NULL,
+    active        INTEGER NOT NULL DEFAULT 1,
+    created_at    TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_alert_user ON price_alerts(user_id);
 """
 
 
@@ -259,3 +271,96 @@ def recent_logs(limit: int = 20) -> list[CollectionLog]:
         ]
     finally:
         conn.close()
+
+
+# ─── 가격 알람 ────────────────────────────────────────────────────────────────
+
+
+def create_alert(alert: PriceAlert) -> PriceAlert:
+    """가격 알람을 등록한다. id/created_at이 채워진 레코드를 반환."""
+    created_at = alert.created_at or _now_iso()
+    conn = _connect()
+    try:
+        cur = conn.execute(
+            """
+            INSERT INTO price_alerts
+                (user_id, item_id, item_name, target_price, direction, active, created_at)
+            VALUES (?,?,?,?,?,?,?)
+            """,
+            (
+                alert.user_id, alert.item_id, alert.item_name, alert.target_price,
+                alert.direction, int(alert.active), created_at,
+            ),
+        )
+        conn.commit()
+        return alert.model_copy(update={"id": int(cur.lastrowid), "created_at": created_at})
+    finally:
+        conn.close()
+
+
+def list_alerts(user_id: str) -> list[PriceAlert]:
+    """사용자의 가격 알람 목록을 반환한다."""
+    conn = _connect()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM price_alerts WHERE user_id=? ORDER BY id DESC", (user_id,)
+        ).fetchall()
+        return [_row_to_alert(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def get_alert(alert_id: int) -> PriceAlert | None:
+    """알람 id로 단건 조회한다."""
+    conn = _connect()
+    try:
+        row = conn.execute(
+            "SELECT * FROM price_alerts WHERE id=?", (alert_id,)
+        ).fetchone()
+        return _row_to_alert(row) if row else None
+    finally:
+        conn.close()
+
+
+def delete_alert(alert_id: int, user_id: str) -> bool:
+    """본인 소유 알람을 삭제한다. 삭제되면 True."""
+    conn = _connect()
+    try:
+        cur = conn.execute(
+            "DELETE FROM price_alerts WHERE id=? AND user_id=?", (alert_id, user_id)
+        )
+        conn.commit()
+        return cur.rowcount > 0
+    finally:
+        conn.close()
+
+
+def latest_price_for_item(item_id: str) -> int | None:
+    """품목의 가장 최근 평균가를 반환한다 (여러 시장이 있으면 평균)."""
+    conn = _connect()
+    try:
+        row = conn.execute(
+            """
+            SELECT AVG(avg_price) AS avg_price FROM price_records
+            WHERE item_id=? AND sale_date=(
+                SELECT MAX(sale_date) FROM price_records WHERE item_id=? AND avg_price > 0
+            ) AND avg_price > 0
+            """,
+            (item_id, item_id),
+        ).fetchone()
+        return int(row["avg_price"]) if row and row["avg_price"] is not None else None
+    finally:
+        conn.close()
+
+
+def _row_to_alert(r: sqlite3.Row) -> PriceAlert:
+    return PriceAlert(
+        id=r["id"],
+        user_id=r["user_id"],
+        item_id=r["item_id"],
+        item_name=r["item_name"] or "",
+        target_price=r["target_price"],
+        direction=r["direction"],
+        active=bool(r["active"]),
+        created_at=r["created_at"],
+    )
