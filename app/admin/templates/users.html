@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}회원 관리{% endblock %}
+{% block content %}
+<h2>👥 회원 관리</h2>
+<p class="info">총 {{ total_users }}명의 등록 사용자</p>
+
+{% if users %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>역할</th>
+            <th>상태</th>
+            <th>마지막 로그인</th>
+            <th>가입일</th>
+            <th>관리</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image }}" alt="" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;">
+                {% endif %}
+                {{ user.name }}
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+                <form method="post" action="/admin/users/{{ user.id }}/role" style="display:inline;">
+                    <select name="role" onchange="this.form.submit()">
+                        <option value="user" {% if user.role == 'user' %}selected{% endif %}>user</option>
+                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>admin</option>
+                    </select>
+                </form>
+            </td>
+            <td>
+                <span class="badge {% if user.is_active %}badge-success{% else %}badge-danger{% endif %}">
+                    {{ "활성" if user.is_active else "비활성" }}
+                </span>
+            </td>
+            <td>{{ user.last_login_at[:16] if user.last_login_at else "-" }}</td>
+            <td>{{ user.created_at[:10] if user.created_at else "-" }}</td>
+            <td>
+                <form method="post" action="/admin/users/{{ user.id }}/toggle" style="display:inline;">
+                    <button type="submit" class="btn btn-sm">
+                        {{ "비활성화" if user.is_active else "활성화" }}
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty">등록된 사용자가 없습니다.</p>
+{% endif %}
+{% endblock %}

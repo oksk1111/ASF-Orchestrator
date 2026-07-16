@@ -150,6 +150,96 @@ class KamisCollector:
         normal.sort(key=lambda p: p["date"])
         return {"current": current, "normal": normal}
 
+    async def get_wholesale_period(
+        self,
+        item_code: str,
+        kind_code: str,
+        rank_code: str,
+        start_day: str,
+        end_day: str,
+        category_code: str = "",
+        country_code: str = "",
+    ) -> list[dict[str, Any]]:
+        """도매 기간별 일별 가격(periodWholesaleProductList)을 조회한다."""
+        if not self.cert_key:
+            raise CollectorError("KAMIS 인증키가 설정되지 않았습니다")
+
+        params: dict[str, str] = {
+            "p_startday": start_day,
+            "p_endday": end_day,
+            "p_itemcode": item_code,
+            "p_kindcode": kind_code,
+            "p_productrankcode": rank_code,
+            "p_convert_kg_yn": "N",
+        }
+        if category_code:
+            params["p_itemcategorycode"] = category_code
+        if country_code:
+            params["p_countrycode"] = country_code
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            rows = await self._request(client, "periodWholesaleProductList", params)
+
+        result: list[dict[str, Any]] = []
+        for row in rows:
+            yyyy = str(row.get("yyyy") or "").strip()
+            regday = str(row.get("regday") or "").strip()
+            price = _parse_price(row.get("price"))
+            if yyyy and regday and "/" in regday:
+                mm, _, dd = regday.partition("/")
+                result.append({
+                    "date": f"{yyyy}{mm.zfill(2)}{dd.zfill(2)}",
+                    "price": price,
+                    "market_name": str(row.get("marketname") or "").strip(),
+                    "county_name": str(row.get("countyname") or "").strip(),
+                })
+        return result
+
+    async def get_retail_period(
+        self,
+        item_code: str,
+        kind_code: str,
+        rank_code: str,
+        start_day: str,
+        end_day: str,
+        category_code: str = "",
+        country_code: str = "",
+    ) -> list[dict[str, Any]]:
+        """소매 기간별 일별 가격(periodRetailProductList)을 조회한다."""
+        if not self.cert_key:
+            raise CollectorError("KAMIS 인증키가 설정되지 않았습니다")
+
+        params: dict[str, str] = {
+            "p_startday": start_day,
+            "p_endday": end_day,
+            "p_itemcode": item_code,
+            "p_kindcode": kind_code,
+            "p_productrankcode": rank_code,
+            "p_convert_kg_yn": "N",
+        }
+        if category_code:
+            params["p_itemcategorycode"] = category_code
+        if country_code:
+            params["p_countrycode"] = country_code
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            rows = await self._request(client, "periodRetailProductList", params)
+
+        result: list[dict[str, Any]] = []
+        for row in rows:
+            yyyy = str(row.get("yyyy") or "").strip()
+            regday = str(row.get("regday") or "").strip()
+            price = _parse_price(row.get("price"))
+            if yyyy and regday and "/" in regday:
+                mm, _, dd = regday.partition("/")
+                result.append({
+                    "date": f"{yyyy}{mm.zfill(2)}{dd.zfill(2)}",
+                    "price": price,
+                    "market_name": str(row.get("marketname") or "").strip(),
+                    "county_name": str(row.get("countyname") or "").strip(),
+                })
+        return result
+
     async def _request(
         self, client: httpx.AsyncClient, action: str, params: dict[str, str]
     ) -> list[dict]:

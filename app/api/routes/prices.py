@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.cache import store
 from app.collectors.base import CollectorError
+from app.core.config import settings
 from app.core.security import require_consumer
 from app.models.schemas import Envelope
 from app.services import history
@@ -50,6 +51,33 @@ def get_items() -> Envelope:
     return Envelope(data=list(seen.values()))
 
 
+@router.get("/items/catalog")
+def get_item_catalog(
+    category: str | None = Query(default=None, description="카테고리 코드 (100~600)"),
+    search: str | None = Query(default=None, description="품목명 검색"),
+    limit: int = Query(default=200, ge=1, le=1000),
+    offset: int = Query(default=0, ge=0),
+) -> Envelope:
+    """KAMIS 전체 아이템 카탈로그를 반환한다."""
+    items = store.query_catalog(category_code=category, search=search, limit=limit, offset=offset)
+    total = store.count_catalog()
+    return Envelope(data={"items": items, "total": total, "limit": limit, "offset": offset})
+
+
+@router.get("/categories")
+def get_categories() -> Envelope:
+    """품목 카테고리 목록을 반환한다."""
+    categories = [
+        {"code": "100", "name": "식량작물"},
+        {"code": "200", "name": "채소류"},
+        {"code": "300", "name": "특용작물"},
+        {"code": "400", "name": "과일류"},
+        {"code": "500", "name": "축산물"},
+        {"code": "600", "name": "수산물"},
+    ]
+    return Envelope(data=categories)
+
+
 @router.get("/items/{item_id}/history")
 async def get_item_history(
     item_id: str,
@@ -66,6 +94,74 @@ async def get_item_history(
     except CollectorError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
+
+@router.get("/items/{item_id}/trend")
+async def get_item_trend(
+    item_id: str,
+    period: str = Query(default="recent", description="recent/monthly/yearly"),
+) -> Envelope:
+    """품목의 가격 추세 데이터를 반환한다.
+
+    - recent: 최근 40일 추세 (10일 간격)
+    - monthly: 월별 평균 추세
+    - yearly: 연도별 평균 추세
+    """
+    from app.collectors.kamis_trend import KamisTrendCollector
+
+    if not settings.kamis_cert_key:
+        raise HTTPException(status_code=503, detail="KAMIS API 키가 설정되지 않았습니다")
+
+    # item_id에서 product_no 추출 (KAMIS-{cat}-{item_code}-{kind}-{rank} → item_code)
+    parts = item_id.split("-")
+    if len(parts) >= 3:
+        product_no = parts[2]
+    else:
+        product_no = item_id
+
+    collector = KamisTrendCollector(settings.kamis_cert_key, settings.kamis_cert_id)
+    try:
+        if period == "monthly":
+            data = await collector.get_monthly_trend(product_no)
+        elif period == "yearly":
+            data = await collector.get_yearly_trend(product_no)
+        else:
+            data = await collector.get_recent_trend(product_no)
+        return Envelope(data=data)
+    except CollectorError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@router.get("/items/{item_id}/regional")
+async def get_item_regional(item_id: str) -> Envelope:
+    """품목의 지역별 가격 비교 데이터를 반환한다."""
+    from app.collectors.kamis_regional import KamisRegionalCollector
+
+    if not settings.kamis_cert_key:
+        raise HTTPException(status_code=503, detail="KAMIS API 키가 설정되지 않았습니다")
+
+    parts = item_id.split("-")
+    if len(parts) >= 3:
+        item_code = parts[2]
+        category_code = parts[1] if len(parts) >= 2 else ""
+        kind_code = parts[3] if len(parts) >= 4 else ""
+        rank_code = parts[4] if len(parts) >= 5 else ""
+    else:
+        item_code = item_id
+        category_code = ""
+        kind_code = ""
+        rank_code = ""
+
+    collector = KamisRegionalCollector(settings.kamis_cert_key, settings.kamis_cert_id)
+    try:
+        data = await collector.get_item_regional(
+            item_code=item_code,
+            kind_code=kind_code,
+            rank_code=rank_code,
+            category_code=category_code,
+        )
+        return Envelope(data=data)
+    except CollectorError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
 @router.get("/sources")

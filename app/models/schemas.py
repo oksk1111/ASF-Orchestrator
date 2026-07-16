@@ -42,6 +42,22 @@ class PriceAlert(BaseModel):
     created_at: str = ""
 
 
+class AlertTrigger(BaseModel):
+    """가격 알람 트리거 기록."""
+
+    id: int | None = None
+    alert_id: int
+    user_id: str
+    item_id: str
+    item_name: str = ""
+    target_price: int
+    actual_price: int
+    direction: str
+    triggered_at: str
+    pushed_at: str | None = None
+    read_at: str | None = None
+
+
 class CollectionLog(BaseModel):
     """수집 실행 로그."""
 
@@ -62,6 +78,89 @@ class SourceSummary(BaseModel):
     record_count: int = 0
     latest_sale_date: str | None = None
     last_collected_at: str | None = None
+
+
+class User(BaseModel):
+    """사용자 정보."""
+
+    id: int | None = None
+    google_id: str = ""
+    email: str = ""
+    name: str = ""
+    profile_image: str = ""
+    role: Literal["user", "admin"] = "user"
+    is_active: bool = True
+    created_at: str = ""
+    last_login_at: str | None = None
+
+
+class GoogleLoginRequest(BaseModel):
+    """Google OAuth 로그인 요청."""
+
+    id_token: str
+
+
+class AuthResponse(BaseModel):
+    """인증 응답."""
+
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int = 30 * 24 * 3600
+    user: User
+
+
+class UserDevice(BaseModel):
+    """사용자 디바이스(FCM 토큰) 정보."""
+
+    id: int | None = None
+    user_id: str
+    fcm_token: str
+    device_name: str = ""
+    platform: str = ""  # "ios" / "android" / "web"
+    created_at: str = ""
+    updated_at: str = ""
+
+
+class DeviceRegisterRequest(BaseModel):
+    """디바이스 FCM 토큰 등록 요청."""
+
+    fcm_token: str
+    device_name: str = ""
+    platform: str = ""
+
+
+class ActivityLog(BaseModel):
+    """사용자 활동 로그."""
+
+    id: int | None = None
+    user_id: str = ""
+    user_email: str = ""
+    action: str = ""
+    detail: str = ""
+    ip_address: str = ""
+    user_agent: str = ""
+    created_at: str = ""
+
+
+class CatalogItem(BaseModel):
+    """KAMIS 아이템 카탈로그 엔트리."""
+
+    id: int | None = None
+    source: str = "KAMIS"
+    item_code: str
+    item_name: str
+    kind_code: str = ""
+    kind_name: str = ""
+    rank_code: str = ""
+    rank_name: str = ""
+    category_code: str
+    category_name: str = ""
+    unit: str = ""
+    canonical_id: str = ""
+    latest_price: int = 0
+    price_change_rate: float = 0.0
+    price_direction: str = ""
+    updated_at: str = ""
 
 
 class Envelope(BaseModel):

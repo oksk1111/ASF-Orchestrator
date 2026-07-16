@@ -31,6 +31,7 @@ class Settings(BaseSettings):
 
     # 스케줄 수집
     collect_interval_hours: int = 6
+    collect_times_kst: str = "08:00,18:00"  # KST 시각 기반 수집 (비어있으면 interval 사용)
     seed_sample_on_empty: bool = True
 
     # 공공데이터 API 키
@@ -38,6 +39,18 @@ class Settings(BaseSettings):
     # KAMIS(kamis.or.kr) 원본 Open API 인증키 — data.go.kr 래퍼가 아님
     kamis_cert_key: str = ""
     kamis_cert_id: str = "1"
+
+    # Google OAuth
+    google_client_id: str = ""
+
+    # JWT
+    jwt_secret: str = "change-me-in-production"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_days: int = 30
+
+    # Firebase Cloud Messaging
+    firebase_project_id: str = ""
+    firebase_service_account_json: str = ""
 
     model_config = SettingsConfigDict(
         env_file=str(_ENV_FILE),

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}활동 로그{% endblock %}
+{% block content %}
+<h2>📋 활동 로그</h2>
+<p class="info">총 {{ total }}건 (보관기간: 30일) | 페이지 {{ page }}</p>
+
+<form method="get" action="/admin/activity" class="filter-form">
+    <input type="text" name="user_id" placeholder="사용자 ID" value="{{ filter_user_id }}">
+    <select name="action">
+        <option value="">전체 액션</option>
+        <option value="login" {% if filter_action == 'login' %}selected{% endif %}>login</option>
+        <option value="alert_create" {% if filter_action == 'alert_create' %}selected{% endif %}>alert_create</option>
+        <option value="alert_delete" {% if filter_action == 'alert_delete' %}selected{% endif %}>alert_delete</option>
+        <option value="api_call" {% if filter_action == 'api_call' %}selected{% endif %}>api_call</option>
+        <option value="page_view" {% if filter_action == 'page_view' %}selected{% endif %}>page_view</option>
+        <option value="admin_access" {% if filter_action == 'admin_access' %}selected{% endif %}>admin_access</option>
+    </select>
+    <button type="submit" class="btn">필터</button>
+</form>
+
+{% if logs %}
+<table>
+    <thead>
+        <tr>
+            <th>시각</th>
+            <th>사용자</th>
+            <th>액션</th>
+            <th>상세</th>
+            <th>IP</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.created_at[:19] }}</td>
+            <td>{{ log.user_id[:20] }}</td>
+            <td><span class="badge">{{ log.action }}</span></td>
+            <td class="detail">{{ log.detail[:80] }}</td>
+            <td>{{ log.ip_address }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="/admin/activity?page={{ page - 1 }}&user_id={{ filter_user_id }}&action={{ filter_action }}" class="btn btn-sm">← 이전</a>
+    {% endif %}
+    {% if logs|length == per_page %}
+    <a href="/admin/activity?page={{ page + 1 }}&user_id={{ filter_user_id }}&action={{ filter_action }}" class="btn btn-sm">다음 →</a>
+    {% endif %}
+</div>
+{% else %}
+<p class="empty">활동 로그가 없습니다.</p>
+{% endif %}
+{% endblock %}

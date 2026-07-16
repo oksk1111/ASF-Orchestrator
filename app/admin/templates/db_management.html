@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}DB 관리{% endblock %}
+{% block content %}
+<h2>🗄️ DB 관리</h2>
+<p class="info">데이터베이스 크기: {{ db_size_mb }} MB</p>
+
+<h3>테이블별 레코드 수</h3>
+<table>
+    <thead>
+        <tr>
+            <th>테이블</th>
+            <th>레코드 수</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for table, count in table_stats.items() %}
+        <tr>
+            <td><code>{{ table }}</code></td>
+            <td>{{ "{:,}".format(count) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>유지보수</h3>
+<div class="actions">
+    <form method="post" action="/admin/db/cleanup">
+        <input type="hidden" name="table" value="all">
+        <button type="submit" class="btn" onclick="return confirm('오래된 로그를 정리하시겠습니까?')">
+            🧹 로그 정리 (30일 초과 활동로그 + 90일 초과 수집로그)
+        </button>
+    </form>
+</div>
+
+<h3>수동 수집</h3>
+<div class="actions">
+    <form method="post" action="/admin/collect">
+        <input type="hidden" name="source" value="ALL">
+        <button type="submit" class="btn btn-primary">📡 전체 수집 실행</button>
+    </form>
+    <form method="post" action="/admin/collect" style="margin-top:8px;">
+        <input type="hidden" name="source" value="KAMIS_CATALOG">
+        <button type="submit" class="btn">📋 카탈로그만 갱신</button>
+    </form>
+</div>
+{% endblock %}

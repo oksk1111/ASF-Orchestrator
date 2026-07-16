@@ -33,13 +33,24 @@ def get_token(
 # ── Recommendations ───────────────────────────────────────────────────────────
 
 @router.get("/fresh-alert/recommendations/today")
-def recommendations_today() -> dict[str, Any]:
-    """오늘의 추천 품목 (가격 캐시에서 최신 데이터 기반)."""
-    records = store.latest_prices(limit=200)
-    seen: dict[str, dict] = {}
+def recommendations_today(limit: int = Query(default=500, ge=1, le=1000)) -> dict[str, Any]:
+    """오늘의 추천 품목 — 전체 수집 데이터를 반환한다.
+
+    프론트엔드의 '분류' 탭은 이 데이터를 카테고리별로 그룹핑하므로
+    limit을 크게 설정하여 전체 품목을 내려준다.
+    """
+    # 최신 판매일 기준으로 전체 품목 조회
+    records = store.query_prices(limit=2000)
+
+    # 품목별 최신 레코드 하나씩 (item_name 기준으로 중복 제거)
+    seen_name: dict[str, dict] = {}
+    seen_id: dict[str, dict] = {}
     for r in records:
-        if r.item_id not in seen:
-            seen[r.item_id] = {
+        if r.avg_price <= 0:
+            continue
+        # item_name 기준 중복 제거 (같은 품목의 도매/소매가 있으면 최초 것만)
+        if r.item_name not in seen_name:
+            seen_name[r.item_name] = {
                 "item_id": r.item_id,
                 "item_name": r.item_name,
                 "category": r.category,
@@ -49,12 +60,34 @@ def recommendations_today() -> dict[str, Any]:
                 "market_name": r.market_name,
                 "source": r.source,
             }
-    recommendations = list(seen.values())[:8]
+        if r.item_id not in seen_id:
+            seen_id[r.item_id] = seen_name[r.item_name]
+
+    # item_catalog에서 가격 변동 방향(direction) 보완
+    import sqlite3
+    from app.core.config import settings as _settings
+    try:
+        conn = sqlite3.connect(str(_settings.cache_db_abspath))
+        conn.row_factory = sqlite3.Row
+        cat_rows = conn.execute(
+            "SELECT item_name, price_direction, price_change_rate, latest_price FROM item_catalog WHERE latest_price > 0"
+        ).fetchall()
+        conn.close()
+        for row in cat_rows:
+            name = row["item_name"]
+            if name in seen_name:
+                seen_name[name]["direction"] = row["price_direction"]
+                seen_name[name]["change_rate"] = row["price_change_rate"]
+    except Exception:
+        pass
+
+    recommendations = list(seen_name.values())[:limit]
     return {
         "status": "success",
         "data": {
             "date": _today(),
             "recommendations": recommendations,
+            "total": len(recommendations),
         },
     }
 
@@ -124,30 +157,77 @@ def current_season() -> dict[str, Any]:
 @router.get("/fresh-alert/notifications")
 def get_notifications(
     user_id: str = Query(default=""),
-    limit: int = Query(default=20, ge=1, le=100),
+    limit: int = Query(default=100, ge=1, le=500),
 ) -> dict[str, Any]:
-    """가격 변동 알림 목록 (캐시 데이터 기반 샘플)."""
-    records = store.latest_prices(limit=200)
+    """가격 변동 알림 목록 — item_catalog의 direction/change_rate 활용.
+
+    KAMIS dailySalesList에서 수집한 전일 대비 등락률(value)과 방향(direction)을
+    활용하여 실제 변동 알림을 생성한다.
+    """
+    import sqlite3
+    from app.core.config import settings as _settings
+
     notifications = []
-    for r in records:
-        if r.avg_price == 0:
-            continue
-        spread = r.max_price - r.min_price
-        change_pct = round(spread / r.avg_price * 100, 1)
-        if change_pct >= 5:
-            notifications.append(
-                {
-                    "id": f"notif-{r.item_id}-{r.sale_date}",
-                    "item_name": r.item_name,
-                    "category": r.category,
-                    "message": f"{r.item_name} 가격이 {change_pct}% 변동되었습니다",
-                    "avg_price": r.avg_price,
-                    "change_pct": change_pct,
-                    "sale_date": r.sale_date,
-                    "market_name": r.market_name,
-                    "read": False,
-                }
-            )
+
+    # item_catalog에서 변동 정보 조회
+    try:
+        conn = sqlite3.connect(str(_settings.cache_db_abspath))
+        conn.row_factory = sqlite3.Row
+        cat_rows = conn.execute(
+            """SELECT item_name, category_name, latest_price, price_direction,
+                      price_change_rate, unit, updated_at
+               FROM item_catalog
+               WHERE latest_price > 0
+               ORDER BY ABS(price_change_rate) DESC"""
+        ).fetchall()
+        conn.close()
+
+        for row in cat_rows:
+            direction = row["price_direction"] or "same"
+            change_rate = float(row["price_change_rate"] or 0)
+            item_name = row["item_name"]
+            category = row["category_name"] or ""
+            avg_price = row["latest_price"]
+            unit = row["unit"] or ""
+            sale_date = (row["updated_at"] or "")[:10].replace("-", "")
+
+            # direction 변환: up→상승, down→하락, same→유지
+            dir_label = {"up": "상승", "down": "하락"}.get(direction, "유지")
+            dir_arrow = {"up": "▲", "down": "▼"}.get(direction, "→")
+
+            notifications.append({
+                "id": f"notif-{item_name}-{sale_date}",
+                "item_name": item_name,
+                "category": category,
+                "message": f"{item_name} {dir_arrow} 전일 대비 {abs(change_rate):.1f}% {dir_label}",
+                "avg_price": avg_price,
+                "change_pct": change_rate,
+                "sale_date": sale_date,
+                "market_name": "전국평균",
+                "direction": direction,
+                "read": False,
+            })
+    except Exception:
+        # fallback: price_records 기반
+        records = store.latest_prices(limit=500)
+        seen: set[str] = set()
+        for r in records:
+            if r.avg_price == 0 or r.item_name in seen:
+                continue
+            seen.add(r.item_name)
+            notifications.append({
+                "id": f"notif-{r.item_id}-{r.sale_date}",
+                "item_name": r.item_name,
+                "category": r.category,
+                "message": f"{r.item_name} 현재가 {r.avg_price:,}원",
+                "avg_price": r.avg_price,
+                "change_pct": 0.0,
+                "sale_date": r.sale_date,
+                "market_name": r.market_name,
+                "direction": "same",
+                "read": False,
+            })
+
     notifications = notifications[:limit]
     return {
         "status": "success",

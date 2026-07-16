@@ -1,15 +1,18 @@
 """관리자 웹 UI 라우트 (HTTP Basic 보호).
 
 - GET  /admin          : 대시보드 (소스 상태, 캐시 요약, 최근 로그)
-- POST /admin/collect  : 수집 실행 (source=SAMPLE|MAFRA|KAMIS|ALL)
+- POST /admin/collect  : 수집 실행 (source=SAMPLE|MAFRA|KAMIS|KAMIS_CATALOG|ALL)
 - GET  /admin/prices   : 캐시 레코드 브라우징
+- GET  /admin/users    : 회원 관리
+- GET  /admin/activity : 활동 로그
+- GET  /admin/db       : DB 관리
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, Depends, Form, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -36,6 +39,11 @@ def _source_status() -> list[dict]:
             "name": "KAMIS",
             "configured": bool(settings.kamis_cert_key),
             "desc": "kamis.or.kr 일별 부류별 도·소매 가격",
+        },
+        {
+            "name": "KAMIS_CATALOG",
+            "configured": bool(settings.kamis_cert_key),
+            "desc": "KAMIS 전체 품목 카탈로그 (dailySalesList)",
         },
         {
             "name": "SAMPLE",
@@ -89,3 +97,79 @@ def prices(request: Request, _: str = Depends(require_admin), source: str | None
         "source": source or "전체",
     }
     return templates.TemplateResponse(request, "prices.html", context)
+
+
+@router.get("/users", response_class=HTMLResponse)
+def admin_users(request: Request, _: str = Depends(require_admin)):
+    """회원 관리 페이지."""
+    users = store.list_users(limit=200)
+    context = {
+        "request": request,
+        "app_name": settings.app_name,
+        "users": users,
+        "total_users": store.count_users(),
+    }
+    return templates.TemplateResponse(request, "users.html", context)
+
+
+@router.post("/users/{user_id}/toggle")
+def toggle_user(user_id: int, _: str = Depends(require_admin)):
+    """사용자 활성/비활성 토글."""
+    store.toggle_user_active(user_id)
+    return RedirectResponse(url="/admin/users", status_code=303)
+
+
+@router.post("/users/{user_id}/role")
+def change_role(user_id: int, role: str = Form(...), _: str = Depends(require_admin)):
+    """사용자 역할 변경."""
+    store.change_user_role(user_id, role)
+    return RedirectResponse(url="/admin/users", status_code=303)
+
+
+@router.get("/activity", response_class=HTMLResponse)
+def admin_activity(
+    request: Request,
+    _: str = Depends(require_admin),
+    user_id: str | None = None,
+    action: str | None = None,
+    page: int = Query(default=1, ge=1),
+):
+    """활동 로그 페이지."""
+    per_page = 50
+    offset = (page - 1) * per_page
+    logs = store.query_activity_logs(user_id=user_id, action=action, limit=per_page, offset=offset)
+    total = store.count_activity_logs()
+    context = {
+        "request": request,
+        "app_name": settings.app_name,
+        "logs": logs,
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "filter_user_id": user_id or "",
+        "filter_action": action or "",
+    }
+    return templates.TemplateResponse(request, "activity_logs.html", context)
+
+
+@router.get("/db", response_class=HTMLResponse)
+def admin_db(request: Request, _: str = Depends(require_admin)):
+    """DB 관리 페이지."""
+    stats = store.get_table_stats()
+    db_size = store.get_db_size()
+    context = {
+        "request": request,
+        "app_name": settings.app_name,
+        "table_stats": stats,
+        "db_size_mb": round(db_size / 1024 / 1024, 2),
+    }
+    return templates.TemplateResponse(request, "db_management.html", context)
+
+
+@router.post("/db/cleanup")
+def db_cleanup(table: str = Form(...), _: str = Depends(require_admin)):
+    """지정 테이블의 오래된 레코드를 정리한다."""
+    from app.services.maintenance import run_maintenance
+    results = run_maintenance()
+    msg = f"정리 완료: {results}"
+    return RedirectResponse(url=f"/admin/db?msg={msg}", status_code=303)
