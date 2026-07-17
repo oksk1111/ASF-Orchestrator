@@ -33,22 +33,26 @@ def get_token(
 # ── Recommendations ───────────────────────────────────────────────────────────
 
 @router.get("/fresh-alert/recommendations/today")
-def recommendations_today(limit: int = Query(default=500, ge=1, le=1000)) -> dict[str, Any]:
-    """오늘의 추천 품목 — 전체 수집 데이터를 반환한다.
+def recommendations_today(
+    limit: int = Query(default=500, ge=1, le=1000),
+    top: int = Query(default=0, ge=0, le=100),
+) -> dict[str, Any]:
+    """오늘의 추천 품목.
 
-    프론트엔드의 '분류' 탭은 이 데이터를 카테고리별로 그룹핑하므로
-    limit을 크게 설정하여 전체 품목을 내려준다.
+    - limit: 전체 품목 수 (분류 탭용, 기본 500)
+    - top: 0이면 전체 반환, 양수이면 가격변동 상위 N개만 반환 (추천 탭용)
     """
+    import sqlite3
+    from app.core.config import settings as _settings
+
     # 최신 판매일 기준으로 전체 품목 조회
     records = store.query_prices(limit=2000)
 
-    # 품목별 최신 레코드 하나씩 (item_name 기준으로 중복 제거)
+    # 품목별 최신 레코드 하나씩 (item_name 기준 중복 제거)
     seen_name: dict[str, dict] = {}
-    seen_id: dict[str, dict] = {}
     for r in records:
         if r.avg_price <= 0:
             continue
-        # item_name 기준 중복 제거 (같은 품목의 도매/소매가 있으면 최초 것만)
         if r.item_name not in seen_name:
             seen_name[r.item_name] = {
                 "item_id": r.item_id,
@@ -59,35 +63,38 @@ def recommendations_today(limit: int = Query(default=500, ge=1, le=1000)) -> dic
                 "sale_date": r.sale_date,
                 "market_name": r.market_name,
                 "source": r.source,
+                "change_rate": 0.0,
+                "direction": "same",
             }
-        if r.item_id not in seen_id:
-            seen_id[r.item_id] = seen_name[r.item_name]
 
-    # item_catalog에서 가격 변동 방향(direction) 보완
-    import sqlite3
-    from app.core.config import settings as _settings
+    # item_catalog에서 가격 변동 정보 보완
     try:
         conn = sqlite3.connect(str(_settings.cache_db_abspath))
         conn.row_factory = sqlite3.Row
         cat_rows = conn.execute(
-            "SELECT item_name, price_direction, price_change_rate, latest_price FROM item_catalog WHERE latest_price > 0"
+            "SELECT item_name, price_direction, price_change_rate FROM item_catalog WHERE latest_price > 0"
         ).fetchall()
         conn.close()
         for row in cat_rows:
             name = row["item_name"]
             if name in seen_name:
-                seen_name[name]["direction"] = row["price_direction"]
-                seen_name[name]["change_rate"] = row["price_change_rate"]
+                seen_name[name]["direction"] = row["price_direction"] or "same"
+                seen_name[name]["change_rate"] = float(row["price_change_rate"] or 0)
     except Exception:
         pass
 
-    recommendations = list(seen_name.values())[:limit]
+    all_items = list(seen_name.values())[:limit]
+
+    if top > 0:
+        # 가격변동 절댓값 기준 내림차순 → 상위 top개
+        all_items = sorted(all_items, key=lambda x: abs(x.get("change_rate", 0)), reverse=True)[:top]
+
     return {
         "status": "success",
         "data": {
             "date": _today(),
-            "recommendations": recommendations,
-            "total": len(recommendations),
+            "recommendations": all_items,
+            "total": len(all_items),
         },
     }
 
