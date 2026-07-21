@@ -8,9 +8,28 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from fastapi import APIRouter, Form, Query
+from fastapi import APIRouter, Depends, Form, Query
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.cache import store
+from app.models.schemas import User
+
+_bearer = HTTPBearer(auto_error=False)
+
+
+def _optional_user(credentials: HTTPAuthorizationCredentials | None = Depends(_bearer)) -> User | None:
+    """JWT가 있으면 사용자를 반환하고 없으면 None을 반환한다 (선택적 인증)."""
+    if credentials is None:
+        return None
+    from app.services.auth import AuthError, decode_jwt_token
+    try:
+        payload = decode_jwt_token(credentials.credentials)
+    except AuthError:
+        return None
+    user_id = payload.get("sub")
+    if not user_id:
+        return None
+    return store.get_user_by_id(int(user_id))
 
 router = APIRouter(prefix="/api/v1", tags=["FreshAlert"])
 
@@ -102,19 +121,50 @@ def recommendations_today(
 # ── Keywords ──────────────────────────────────────────────────────────────────
 
 @router.get("/fresh-alert/keywords")
-def get_keywords(user_id: str = Query(default="")) -> dict[str, Any]:
-    """사용자 관심 키워드 목록 (샘플)."""
-    sample_keywords = ["배추", "사과", "대파", "감자", "고등어", "삼겹살"]
+def get_keywords(user: User | None = Depends(_optional_user)) -> dict[str, Any]:
+    """사용자 관심 키워드 목록. 로그인 시 DB에서 조회, 미로그인 시 샘플 반환."""
+    sample = [
+        {"keyword": kw, "alert_enabled": True, "threshold_pct": 10.0}
+        for kw in ["배추", "사과", "대파", "감자", "고등어", "삼겹살"]
+    ]
+    if user is None:
+        keywords = sample
+        user_id = "anonymous"
+    else:
+        keywords = store.get_user_keywords(user.id) or sample
+        user_id = str(user.id)
     return {
         "status": "success",
         "data": {
             "user_id": user_id,
-            "keywords": [
-                {"keyword": kw, "alert_enabled": True, "threshold_pct": 10}
-                for kw in sample_keywords
-            ],
+            "keywords": keywords,
         },
     }
+
+
+@router.post("/fresh-alert/keywords")
+def add_keyword(
+    keyword: str = Query(...),
+    alert_enabled: bool = Query(default=True),
+    threshold_pct: float = Query(default=10.0),
+    user: User | None = Depends(_optional_user),
+) -> dict[str, Any]:
+    """관심 키워드를 추가한다 (로그인 필요)."""
+    from fastapi import HTTPException
+    if user is None:
+        raise HTTPException(status_code=401, detail="로그인이 필요합니다")
+    store.add_user_keyword(user.id, keyword, alert_enabled, threshold_pct)
+    return {"status": "success", "data": {"keyword": keyword}}
+
+
+@router.delete("/fresh-alert/keywords/{keyword}")
+def delete_keyword(keyword: str, user: User | None = Depends(_optional_user)) -> dict[str, Any]:
+    """관심 키워드를 삭제한다 (로그인 필요)."""
+    from fastapi import HTTPException
+    if user is None:
+        raise HTTPException(status_code=401, detail="로그인이 필요합니다")
+    removed = store.remove_user_keyword(user.id, keyword)
+    return {"status": "success", "data": {"removed": removed}}
 
 
 # ── Seasons ───────────────────────────────────────────────────────────────────
@@ -163,8 +213,8 @@ def current_season() -> dict[str, Any]:
 
 @router.get("/fresh-alert/notifications")
 def get_notifications(
-    user_id: str = Query(default=""),
     limit: int = Query(default=100, ge=1, le=500),
+    user: User | None = Depends(_optional_user),
 ) -> dict[str, Any]:
     """가격 변동 알림 목록 — item_catalog의 direction/change_rate 활용.
 
@@ -239,7 +289,7 @@ def get_notifications(
     return {
         "status": "success",
         "data": {
-            "user_id": user_id,
+            "user_id": str(user.id) if user else "anonymous",
             "total": len(notifications),
             "notifications": notifications,
         },

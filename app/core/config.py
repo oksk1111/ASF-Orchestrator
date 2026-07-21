@@ -42,6 +42,7 @@ class Settings(BaseSettings):
 
     # Google OAuth
     google_client_id: str = ""
+    google_client_secret: str = ""
 
     # JWT
     jwt_secret: str = "change-me-in-production"

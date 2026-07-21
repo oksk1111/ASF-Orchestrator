@@ -142,6 +142,18 @@ CREATE TABLE IF NOT EXISTS activity_logs (
 );
 CREATE INDEX IF NOT EXISTS idx_activity_user ON activity_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_date ON activity_logs(created_at);
+
+CREATE TABLE IF NOT EXISTS user_keywords (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id         INTEGER NOT NULL,
+    keyword         TEXT NOT NULL,
+    alert_enabled   INTEGER NOT NULL DEFAULT 1,
+    threshold_pct   REAL NOT NULL DEFAULT 10.0,
+    created_at      TEXT NOT NULL,
+    UNIQUE(user_id, keyword),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+CREATE INDEX IF NOT EXISTS idx_user_keywords_user ON user_keywords(user_id);
 """
 
 
@@ -960,7 +972,7 @@ def get_table_stats() -> dict[str, int]:
     """각 테이블의 레코드 수를 반환한다."""
     tables = [
         "price_records", "collection_logs", "price_alerts", "alert_triggers",
-        "user_devices", "users", "item_catalog", "activity_logs",
+        "user_devices", "users", "item_catalog", "activity_logs", "user_keywords",
     ]
     conn = _connect()
     try:
@@ -980,3 +992,53 @@ def get_db_size() -> int:
     """DB 파일 크기(bytes)를 반환한다."""
     path = settings.cache_db_abspath
     return path.stat().st_size if path.exists() else 0
+
+
+# ─── 사용자 키워드 ────────────────────────────────────────────────────────────
+
+
+def get_user_keywords(user_id: int) -> list[dict]:
+    """사용자의 관심 키워드 목록을 반환한다."""
+    conn = _connect()
+    try:
+        rows = conn.execute(
+            "SELECT keyword, alert_enabled, threshold_pct FROM user_keywords WHERE user_id = ? ORDER BY created_at",
+            (user_id,),
+        ).fetchall()
+        return [
+            {"keyword": r["keyword"], "alert_enabled": bool(r["alert_enabled"]), "threshold_pct": r["threshold_pct"]}
+            for r in rows
+        ]
+    finally:
+        conn.close()
+
+
+def add_user_keyword(user_id: int, keyword: str, alert_enabled: bool = True, threshold_pct: float = 10.0) -> None:
+    """키워드를 추가하거나 이미 있으면 설정을 갱신한다."""
+    conn = _connect()
+    try:
+        conn.execute(
+            """INSERT INTO user_keywords (user_id, keyword, alert_enabled, threshold_pct, created_at)
+               VALUES (?, ?, ?, ?, ?)
+               ON CONFLICT(user_id, keyword) DO UPDATE SET
+                   alert_enabled = excluded.alert_enabled,
+                   threshold_pct = excluded.threshold_pct""",
+            (user_id, keyword, int(alert_enabled), threshold_pct, _now_iso()),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def remove_user_keyword(user_id: int, keyword: str) -> bool:
+    """키워드를 삭제한다. 삭제된 경우 True를 반환한다."""
+    conn = _connect()
+    try:
+        cur = conn.execute(
+            "DELETE FROM user_keywords WHERE user_id = ? AND keyword = ?",
+            (user_id, keyword),
+        )
+        conn.commit()
+        return cur.rowcount > 0
+    finally:
+        conn.close()
